@@ -1,0 +1,30 @@
+### Temp files
+\#*
+*\#
+*~
+.#*
+.*.swp
+
+### C/C++
+*.o
+*.a
+*.so
+*.bin
+build*/
+compile_commands.json
+.clangd*/
+
+### Python
+__pycache__
+*.pyc
+
+
+### kicad files
+*.*-bak
+*-cache.lib
+fp-info-cache
+fp-lib-table
+sym-lib-table
+gerber*/
+*.zip
+log*/
