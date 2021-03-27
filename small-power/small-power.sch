@@ -1,0 +1,566 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "Small Power Board"
+Date "2021-01-29"
+Rev "1.0"
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Transistor_BJT:TIP3055 Q1
+U 1 1 6014C14A
+P 6100 1900
+F 0 "Q1" V 6428 1900 50  0000 C CNN
+F 1 "TIP3055" V 6337 1900 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-218-3_Vertical" H 6300 1825 50  0001 L CIN
+F 3 "http://www.onsemi.com/pub_link/Collateral/TIP3055-D.PDF" H 6100 1900 50  0001 L CNN
+	1    6100 1900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Diode:1N4001 D2
+U 1 1 6014D42F
+P 5600 2700
+F 0 "D2" V 5646 2620 50  0000 R CNN
+F 1 "1N4001" V 5555 2620 50  0000 R CNN
+F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" H 5600 2525 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/88503/1n4001.pdf" H 5600 2700 50  0001 C CNN
+	1    5600 2700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:C C7
+U 1 1 6014E711
+P 6100 2450
+F 0 "C7" H 6215 2496 50  0000 L CNN
+F 1 "100n" H 6215 2405 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L4.6mm_W2.0mm_P2.50mm_MKS02_FKP02" H 6138 2300 50  0001 C CNN
+F 3 "~" H 6100 2450 50  0001 C CNN
+	1    6100 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C4
+U 1 1 6014EE04
+P 5100 2450
+F 0 "C4" H 5215 2496 50  0000 L CNN
+F 1 "100n" H 5215 2405 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L4.6mm_W2.0mm_P2.50mm_MKS02_FKP02" H 5138 2300 50  0001 C CNN
+F 3 "~" H 5100 2450 50  0001 C CNN
+	1    5100 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C1
+U 1 1 6014F90D
+P 4650 2450
+F 0 "C1" H 4768 2496 50  0000 L CNN
+F 1 "470u" H 4768 2405 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D13.0mm_P5.00mm" H 4688 2300 50  0001 C CNN
+F 3 "~" H 4650 2450 50  0001 C CNN
+	1    4650 2450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C10
+U 1 1 6014FE5F
+P 6650 2450
+F 0 "C10" H 6768 2496 50  0000 L CNN
+F 1 "22u" H 6768 2405 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm" H 6688 2300 50  0001 C CNN
+F 3 "~" H 6650 2450 50  0001 C CNN
+	1    6650 2450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4650 2300 4650 2150
+Wire Wire Line
+	4650 2150 5100 2150
+Wire Wire Line
+	5100 2300 5100 2150
+Connection ~ 5100 2150
+Wire Wire Line
+	5100 2150 5300 2150
+Wire Wire Line
+	5600 2450 5600 2550
+Wire Wire Line
+	5600 2850 5100 2850
+Wire Wire Line
+	4650 2850 4650 2600
+Wire Wire Line
+	5100 2600 5100 2850
+Connection ~ 5100 2850
+Wire Wire Line
+	5100 2850 4650 2850
+Wire Wire Line
+	5600 2850 6100 2850
+Wire Wire Line
+	6100 2850 6100 2600
+Connection ~ 5600 2850
+Wire Wire Line
+	6100 2850 6650 2850
+Wire Wire Line
+	6650 2850 6650 2600
+Connection ~ 6100 2850
+Wire Wire Line
+	5900 2150 6100 2150
+Wire Wire Line
+	6100 2300 6100 2150
+Connection ~ 6100 2150
+Wire Wire Line
+	6100 2150 6100 2100
+Wire Wire Line
+	5900 1800 5100 1800
+Wire Wire Line
+	5100 1800 5100 2150
+Wire Wire Line
+	6300 1800 6650 1800
+Wire Wire Line
+	6650 1800 6650 2300
+$Comp
+L Transistor_BJT:TIP3055 Q2
+U 1 1 601529FF
+P 6100 3400
+F 0 "Q2" V 6428 3400 50  0000 C CNN
+F 1 "TIP3055" V 6337 3400 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-218-3_Vertical" H 6300 3325 50  0001 L CIN
+F 3 "http://www.onsemi.com/pub_link/Collateral/TIP3055-D.PDF" H 6100 3400 50  0001 L CNN
+	1    6100 3400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Diode:1N4001 D3
+U 1 1 60152A09
+P 5600 4200
+F 0 "D3" V 5646 4120 50  0000 R CNN
+F 1 "1N4001" V 5555 4120 50  0000 R CNN
+F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" H 5600 4025 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/88503/1n4001.pdf" H 5600 4200 50  0001 C CNN
+	1    5600 4200
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:C C8
+U 1 1 60152A13
+P 6100 3950
+F 0 "C8" H 6215 3996 50  0000 L CNN
+F 1 "100n" H 6215 3905 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L4.6mm_W2.0mm_P2.50mm_MKS02_FKP02" H 6138 3800 50  0001 C CNN
+F 3 "~" H 6100 3950 50  0001 C CNN
+	1    6100 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C5
+U 1 1 60152A1D
+P 5100 3950
+F 0 "C5" H 5215 3996 50  0000 L CNN
+F 1 "100n" H 5215 3905 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L4.6mm_W2.0mm_P2.50mm_MKS02_FKP02" H 5138 3800 50  0001 C CNN
+F 3 "~" H 5100 3950 50  0001 C CNN
+	1    5100 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C2
+U 1 1 60152A27
+P 4650 3950
+F 0 "C2" H 4768 3996 50  0000 L CNN
+F 1 "470u" H 4768 3905 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D13.0mm_P5.00mm" H 4688 3800 50  0001 C CNN
+F 3 "~" H 4650 3950 50  0001 C CNN
+	1    4650 3950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C11
+U 1 1 60152A31
+P 6650 3950
+F 0 "C11" H 6768 3996 50  0000 L CNN
+F 1 "22u" H 6768 3905 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm" H 6688 3800 50  0001 C CNN
+F 3 "~" H 6650 3950 50  0001 C CNN
+	1    6650 3950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4650 3800 4650 3650
+Wire Wire Line
+	4650 3650 5100 3650
+Wire Wire Line
+	5100 3800 5100 3650
+Connection ~ 5100 3650
+Wire Wire Line
+	5100 3650 5300 3650
+Wire Wire Line
+	5600 3950 5600 4050
+Wire Wire Line
+	5600 4350 5100 4350
+Wire Wire Line
+	4650 4350 4650 4100
+Wire Wire Line
+	5100 4100 5100 4350
+Connection ~ 5100 4350
+Wire Wire Line
+	5100 4350 4650 4350
+Wire Wire Line
+	5600 4350 6100 4350
+Wire Wire Line
+	6100 4350 6100 4100
+Connection ~ 5600 4350
+Wire Wire Line
+	6100 4350 6650 4350
+Wire Wire Line
+	6650 4350 6650 4100
+Connection ~ 6100 4350
+Wire Wire Line
+	5900 3650 6100 3650
+Wire Wire Line
+	6100 3800 6100 3650
+Connection ~ 6100 3650
+Wire Wire Line
+	6100 3650 6100 3600
+Wire Wire Line
+	5900 3300 5100 3300
+Wire Wire Line
+	5100 3300 5100 3650
+Wire Wire Line
+	6300 3300 6650 3300
+Wire Wire Line
+	6650 3300 6650 3800
+$Comp
+L Transistor_BJT:TIP3055 Q3
+U 1 1 6015B60A
+P 6100 4900
+F 0 "Q3" V 6428 4900 50  0000 C CNN
+F 1 "TIP3055" V 6337 4900 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-218-3_Vertical" H 6300 4825 50  0001 L CIN
+F 3 "http://www.onsemi.com/pub_link/Collateral/TIP3055-D.PDF" H 6100 4900 50  0001 L CNN
+	1    6100 4900
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Diode:1N4001 D4
+U 1 1 6015B614
+P 5600 5700
+F 0 "D4" V 5646 5620 50  0000 R CNN
+F 1 "1N4001" V 5555 5620 50  0000 R CNN
+F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" H 5600 5525 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/88503/1n4001.pdf" H 5600 5700 50  0001 C CNN
+	1    5600 5700
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:C C9
+U 1 1 6015B61E
+P 6100 5450
+F 0 "C9" H 6215 5496 50  0000 L CNN
+F 1 "100n" H 6215 5405 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L4.6mm_W2.0mm_P2.50mm_MKS02_FKP02" H 6138 5300 50  0001 C CNN
+F 3 "~" H 6100 5450 50  0001 C CNN
+	1    6100 5450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C6
+U 1 1 6015B628
+P 5100 5450
+F 0 "C6" H 5215 5496 50  0000 L CNN
+F 1 "100n" H 5215 5405 50  0000 L CNN
+F 2 "Capacitor_THT:C_Rect_L4.6mm_W2.0mm_P2.50mm_MKS02_FKP02" H 5138 5300 50  0001 C CNN
+F 3 "~" H 5100 5450 50  0001 C CNN
+	1    5100 5450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C3
+U 1 1 6015B632
+P 4650 5450
+F 0 "C3" H 4768 5496 50  0000 L CNN
+F 1 "470u" H 4768 5405 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D13.0mm_P5.00mm" H 4688 5300 50  0001 C CNN
+F 3 "~" H 4650 5450 50  0001 C CNN
+	1    4650 5450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:CP C12
+U 1 1 6015B63C
+P 6650 5450
+F 0 "C12" H 6768 5496 50  0000 L CNN
+F 1 "22u" H 6768 5405 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm" H 6688 5300 50  0001 C CNN
+F 3 "~" H 6650 5450 50  0001 C CNN
+	1    6650 5450
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4650 5300 4650 5150
+Wire Wire Line
+	4650 5150 5100 5150
+Wire Wire Line
+	5100 5300 5100 5150
+Connection ~ 5100 5150
+Wire Wire Line
+	5100 5150 5300 5150
+Wire Wire Line
+	5600 5450 5600 5550
+Wire Wire Line
+	5600 5850 5100 5850
+Wire Wire Line
+	4650 5850 4650 5600
+Wire Wire Line
+	5100 5600 5100 5850
+Connection ~ 5100 5850
+Wire Wire Line
+	5100 5850 4650 5850
+Wire Wire Line
+	5600 5850 6100 5850
+Wire Wire Line
+	6100 5850 6100 5600
+Connection ~ 5600 5850
+Wire Wire Line
+	6100 5850 6650 5850
+Wire Wire Line
+	6650 5850 6650 5600
+Connection ~ 6100 5850
+Wire Wire Line
+	5900 5150 6100 5150
+Wire Wire Line
+	6100 5300 6100 5150
+Connection ~ 6100 5150
+Wire Wire Line
+	6100 5150 6100 5100
+Wire Wire Line
+	5900 4800 5100 4800
+Wire Wire Line
+	5100 4800 5100 5150
+Wire Wire Line
+	6300 4800 6650 4800
+Wire Wire Line
+	6650 4800 6650 5300
+$Comp
+L Regulator_Linear:LM7812_TO220 U2
+U 1 1 601528D5
+P 5600 3650
+F 0 "U2" H 5600 3892 50  0000 C CNN
+F 1 "LM7812_TO220" H 5600 3801 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 5600 3875 50  0001 C CIN
+F 3 "https://www.onsemi.cn/PowerSolutions/document/MC7800-D.PDF" H 5600 3600 50  0001 C CNN
+	1    5600 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Regulator_Linear:LM7815_TO220 U1
+U 1 1 60163628
+P 5600 2150
+F 0 "U1" H 5600 2392 50  0000 C CNN
+F 1 "LM7815_TO220" H 5600 2301 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 5600 2375 50  0001 C CIN
+F 3 "https://www.onsemi.cn/PowerSolutions/document/MC7800-D.PDF" H 5600 2100 50  0001 C CNN
+	1    5600 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Regulator_Linear:LM7805_TO220 U3
+U 1 1 60166A64
+P 5600 5150
+F 0 "U3" H 5600 5392 50  0000 C CNN
+F 1 "LM7805_TO220" H 5600 5301 50  0000 C CNN
+F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 5600 5375 50  0001 C CIN
+F 3 "https://www.onsemi.cn/PowerSolutions/document/MC7800-D.PDF" H 5600 5100 50  0001 C CNN
+	1    5600 5150
+	1    0    0    -1  
+$EndComp
+Connection ~ 4650 2850
+Connection ~ 4650 4350
+Connection ~ 4650 5850
+Wire Wire Line
+	6650 5850 7050 5850
+Wire Wire Line
+	7050 5850 7050 5250
+Wire Wire Line
+	7050 5250 7350 5250
+Connection ~ 6650 5850
+Wire Wire Line
+	6650 4800 7050 4800
+Wire Wire Line
+	7050 4800 7050 5150
+Wire Wire Line
+	7050 5150 7350 5150
+Connection ~ 6650 4800
+Wire Wire Line
+	6650 3300 7050 3300
+Wire Wire Line
+	7050 3300 7050 3500
+Wire Wire Line
+	7050 3500 7350 3500
+Connection ~ 6650 3300
+Wire Wire Line
+	6650 1800 7050 1800
+Wire Wire Line
+	7050 1800 7050 2150
+Wire Wire Line
+	7050 2150 7350 2150
+Connection ~ 6650 1800
+Wire Wire Line
+	4650 3650 4450 3650
+Wire Wire Line
+	4450 2150 4650 2150
+Wire Wire Line
+	4450 2150 4450 3650
+Connection ~ 4650 3650
+Connection ~ 4650 2150
+Wire Wire Line
+	4650 5150 4450 5150
+Wire Wire Line
+	4450 5150 4450 3650
+Connection ~ 4650 5150
+Connection ~ 4450 3650
+Connection ~ 4450 2150
+Wire Wire Line
+	3650 2150 4100 2150
+Wire Wire Line
+	3050 2150 2950 2150
+Wire Wire Line
+	2950 2150 2950 2850
+$Comp
+L Connector:Conn_01x02_Female J1
+U 1 1 601806DC
+P 2400 1900
+F 0 "J1" H 2292 1993 50  0000 C CNN
+F 1 "Conn_01x02_Female" H 2292 1994 50  0001 C CNN
+F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 2400 1900 50  0001 C CNN
+F 3 "~" H 2400 1900 50  0001 C CNN
+	1    2400 1900
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3350 1800 3350 1850
+Wire Wire Line
+	3350 2550 3350 2450
+Text Label 7150 2150 0    50   ~ 0
++15V
+Text Label 7150 3500 0    50   ~ 0
++12V
+Text Label 7150 5150 0    50   ~ 0
++5V
+Text Label 7150 2250 0    50   ~ 0
+GND
+Wire Wire Line
+	2950 2850 4200 2850
+Wire Wire Line
+	2950 4350 2950 2850
+Wire Wire Line
+	2950 4350 4650 4350
+Connection ~ 2950 2850
+Wire Wire Line
+	2950 5850 2950 4350
+Wire Wire Line
+	2950 5850 4650 5850
+Connection ~ 2950 4350
+$Comp
+L Device:D_Bridge_-AA+ D1
+U 1 1 601A9222
+P 3350 2150
+F 0 "D1" H 3694 2196 50  0000 L CNN
+F 1 "GSIB2520" H 3694 2105 50  0000 L CNN
+F 2 "Diode_THT:Diode_Bridge_32.0x5.6x17.0mm_P10.0mm_P7.5mm" H 3350 2150 50  0001 C CNN
+F 3 "~" H 3350 2150 50  0001 C CNN
+	1    3350 2150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2600 1800 3350 1800
+Wire Wire Line
+	2600 1900 2600 2550
+Wire Wire Line
+	2600 2550 3350 2550
+$Comp
+L Connector:Conn_01x02_Female J3
+U 1 1 601682F1
+P 7550 2150
+F 0 "J3" H 7442 2243 50  0000 C CNN
+F 1 "Conn_01x02_Female" H 7442 2244 50  0001 C CNN
+F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 7550 2150 50  0001 C CNN
+F 3 "~" H 7550 2150 50  0001 C CNN
+	1    7550 2150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6650 2850 7050 2850
+Wire Wire Line
+	7050 2850 7050 2250
+Wire Wire Line
+	7050 2250 7350 2250
+Connection ~ 6650 2850
+$Comp
+L Connector:Conn_01x02_Female J4
+U 1 1 601829F6
+P 7550 3500
+F 0 "J4" H 7442 3593 50  0000 C CNN
+F 1 "Conn_01x02_Female" H 7442 3594 50  0001 C CNN
+F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 7550 3500 50  0001 C CNN
+F 3 "~" H 7550 3500 50  0001 C CNN
+	1    7550 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x02_Female J5
+U 1 1 601861DC
+P 7550 5150
+F 0 "J5" H 7442 5243 50  0000 C CNN
+F 1 "Conn_01x02_Female" H 7442 5244 50  0001 C CNN
+F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 7550 5150 50  0001 C CNN
+F 3 "~" H 7550 5150 50  0001 C CNN
+	1    7550 5150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6650 4350 7050 4350
+Wire Wire Line
+	7050 4350 7050 3600
+Wire Wire Line
+	7050 3600 7350 3600
+Connection ~ 6650 4350
+Text Label 7150 3600 0    50   ~ 0
+GND
+Text Label 7150 5250 0    50   ~ 0
+GND
+$Comp
+L Connector:Conn_01x02_Female J2
+U 1 1 6016AB59
+P 4650 1750
+F 0 "J2" H 4542 1843 50  0000 C CNN
+F 1 "Conn_01x02_Female" H 4542 1844 50  0001 C CNN
+F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 4650 1750 50  0001 C CNN
+F 3 "~" H 4650 1750 50  0001 C CNN
+	1    4650 1750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4450 1850 4200 1850
+Wire Wire Line
+	4200 1850 4200 2850
+Connection ~ 4200 2850
+Wire Wire Line
+	4200 2850 4650 2850
+Wire Wire Line
+	4450 1750 4100 1750
+Wire Wire Line
+	4100 1750 4100 2150
+Connection ~ 4100 2150
+Wire Wire Line
+	4100 2150 4450 2150
+Text Label 4200 1750 0    50   ~ 0
+VCC
+Text Label 4200 1850 0    50   ~ 0
+GND
+$EndSCHEMATC
