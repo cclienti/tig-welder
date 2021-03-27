@@ -4,18 +4,19 @@ cmake_minimum_required(VERSION 3.13)
 # (note this can come from environment, CMake cache etc)
 set(PICO_SDK_FETCH_FROM_GIT on)
 
-# pico_sdk_import.cmake is a single file copied from this SDK
-# note: this must happen before project()
-include(pico_sdk_import.cmake)
+# Get the sdk from the submodule pico-sdk
+include(pico-sdk/pico_sdk_init.cmake)
 
-project(my_project)
+project(tig-welder-firmware)
 
 # initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
 # rest of your project
 
-add_executable(tig_welder src/main.cpp)
+add_executable(tig_welder
+  src/main.cpp
+  src/lcd_display.cpp)
 
 # Add pico_stdlib library which aggregates commonly used features
 target_include_directories(tig_welder PUBLIC include)
