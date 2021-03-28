@@ -1,0 +1,246 @@
+#include "tig-welder/lcd_display.h"
+#include "hardware/gpio.h"
+#include "hardware/i2c.h"
+#include "pico/time.h"
+
+#include <algorithm>
+#include <iomanip>
+#include <cstdlib>
+
+enum {
+	LCDControlCommandMode = 0x00,
+	LCDControlCharacterMode = 0x01,
+	LCDControlReadMode = 0x02,
+	LCDControlEnable = 0x04,
+	LCDControlBacklightOn = 0x08,
+	LCDControlBacklightOff = 0x00,
+
+	LCDCommandClearDisplay = 0x01,
+
+	LCDCommandReturnHome = 0x02,
+
+	LCDCommandEntryMode = 0x04,
+	LCDEntryModeDisplayShift = 0x01,
+	LCDEntryModeIncrement = 0x02,
+	LCDEntryModeDecrement = 0x00,
+
+	LCDCommandDisplayControl = 0x08,
+	LCDDisplayControlBlinkingOff = 0x00,
+	LCDDisplayControlBlinkingOn = 0x01,
+	LCDDisplayControlCursorOff = 0x00,
+	LCDDisplayControlCursorOn = 0x02,
+	LCDDisplayControlEntireDisplay = 0x04,
+
+	LCDCommandCursorShift = 0x10,
+	LCDCursorShiftLeft = 0x00,
+	LCDCursorShiftright = 0x04,
+	LCDCursorShiftCursorMove = 0x00,
+	LCDCursorShiftDisplayShift = 0x08,
+
+	LCDCommandFunctionSet = 0x20,
+	LCDFunctionSet5x10Dots = 0x04,
+	LCDFunctionSet5x8Dots = 0x00,
+	LCDFunctionSet2Lines = 0x08,
+	LCDFunctionSet1Line = 0x00,
+
+	LCDCommandSetCGRAM = 0x40,
+
+	LCDCommandSetDDRAM = 0x80,
+};
+
+
+LCDDisplay::LCDDisplay(std::uint8_t i2c_inst_num, std::uint32_t i2c_speed,
+                       std::uint8_t i2c_addr, std::uint8_t sda_pin,
+                       std::uint8_t scl_pin, bool pullup,
+                       std::uint8_t num_cols, std::uint8_t num_lines,
+                       bool backlight):
+	m_i2c_inst (i2c_inst_num == 0 ? *i2c0 : *i2c1),
+	m_i2c_addr (i2c_addr),
+	m_num_cols (num_cols),
+	m_num_lines (num_lines),
+	m_backlight (backlight)
+{
+	// Init the i2c interface
+	i2c_init(&m_i2c_inst, i2c_speed);
+
+	gpio_set_function(sda_pin, GPIO_FUNC_I2C);
+	gpio_set_function(scl_pin, GPIO_FUNC_I2C);
+
+	if (pullup) {
+		gpio_pull_up(sda_pin);
+		gpio_pull_up(scl_pin);
+	}
+
+	// We use the LCD in 4-bit mode in order to keep 4 bits for the LCD
+	// control bits (the i2c expander PCF8574 provides only 8-bit).
+
+	// Specific init sequence for the lcd to put it in 4 bits mode.
+	send_nibble(0x30);
+	sleep_ms(5);
+	send_nibble(0x30);
+	sleep_ms(5);
+	send_nibble(0x30);
+	sleep_us(120);
+	send_nibble(0x20);
+
+	if (num_lines > 1) {
+		send_command(LCDCommandFunctionSet | LCDFunctionSet5x8Dots | LCDFunctionSet2Lines);
+	}
+	else {
+		send_command(LCDCommandFunctionSet | LCDFunctionSet5x8Dots | LCDFunctionSet1Line);
+	}
+	send_command(LCDCommandEntryMode | LCDEntryModeIncrement);
+	send_command(LCDCommandDisplayControl | LCDDisplayControlBlinkingOff |
+	             LCDDisplayControlCursorOff | LCDDisplayControlEntireDisplay);
+
+	clear();
+	home();
+}
+
+void LCDDisplay::backlight(bool enable)
+{
+	m_backlight = enable;
+	i2c_write(get_backlight_state());
+}
+
+void LCDDisplay::clear(void)
+{
+	send_command(LCDCommandClearDisplay);
+	sleep_ms(2);
+}
+
+void LCDDisplay::home(void)
+{
+	send_command(LCDCommandReturnHome);
+	// Execution time of "Return home" command is 1.52 ms
+	sleep_ms(2);
+}
+
+void LCDDisplay::set_pos(std::uint8_t row, std::uint8_t col)
+{
+	// For four lines LCD, There is only two lines in the controller
+	// brocken into four physical lines.
+	//
+	//                  Position   1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+	// Line 0 DDRAM Address(hex)  00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13
+	// Line 1 DDRAM Address(hex)  40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53
+	// Line 2 DDRAM Address(hex)  14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27
+	// Line 3 DDRAM Address(hex)  54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67
+	std::uint8_t const row_offsets[] = {0x00, 0x40, 0x14, 0x54};
+	row = std::min<std::uint8_t>(row, m_num_lines - 1);
+	col = std::min<std::uint8_t>(row, m_num_cols - 1);
+	std::uint8_t ddram = row_offsets[row] + col;
+	send_command(LCDCommandSetDDRAM | ddram);
+
+	std::setfill("0");
+}
+
+void LCDDisplay::write(const char *str)
+{
+	while(*str) {
+		send_char(*str++);
+	}
+}
+
+void LCDDisplay::reset_format()
+{
+	m_format_width = 0;
+	m_format_fill = '\0';
+}
+
+LCDDisplay &LCDDisplay::operator<<(const char *str)
+{
+	write(str);
+	return *this;
+}
+
+LCDDisplay &LCDDisplay::operator<<(const std::string &str)
+{
+	write(str.c_str());
+	return *this;
+}
+
+LCDDisplay &LCDDisplay::operator<<(const int &num)
+{
+	char buffer1[32];
+	char buffer2[32];
+
+	if (m_format_fill) {
+		sprintf(buffer1, "%%0%dd", m_format_width);
+	}
+	else {
+		sprintf(buffer1, "%%%dd", m_format_width);
+	}
+
+	sprintf(buffer2, buffer1, num);
+
+	if (m_format_fill) {
+		char *pbuf = buffer2;
+		for(char *pbuf = buffer2; pbuf[0] != '\0'; pbuf++) {
+			if (pbuf[1] == '\0') break;
+			if (pbuf[0] == '0') {
+				pbuf[0] = m_format_fill;
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+	write(buffer2);
+
+
+	return *this;
+}
+
+LCDDisplay &LCDDisplay::operator<<(const FormatFill &f)
+{
+	m_format_fill = f.m_c;
+	return *this;
+}
+
+LCDDisplay &LCDDisplay::operator<<(const FormatWidth &w)
+{
+	m_format_width = w.m_w;
+	return *this;
+}
+
+std::uint8_t LCDDisplay::get_backlight_state(void)
+{
+	return m_backlight ? LCDControlBacklightOn : LCDControlBacklightOff;
+}
+
+void LCDDisplay::i2c_write(std::uint8_t value)
+{
+	i2c_write_blocking(&m_i2c_inst, m_i2c_addr, &value, 1, false);
+}
+
+void LCDDisplay::send_nibble(std::uint8_t nibble)
+{
+	i2c_write(nibble);
+	sleep_us(1);
+	i2c_write(nibble | LCDControlEnable);
+	sleep_us(1);
+	i2c_write(nibble & ~LCDControlEnable);
+	sleep_us(50);
+}
+
+void LCDDisplay::send_byte(std::uint8_t value, std::uint8_t mode)
+{
+	std::uint8_t backlight = get_backlight_state();
+	std::uint8_t high = (value & 0xF0) | mode | backlight;
+	std::uint8_t low = ((value << 4) & 0xF0) | mode | backlight;
+
+	send_nibble(high);
+	send_nibble(low);
+}
+
+void LCDDisplay::send_command(std::uint8_t value)
+{
+	send_byte(value, LCDControlCommandMode);
+}
+
+void LCDDisplay::send_char(std::uint8_t value)
+{
+	send_byte(value, LCDControlCharacterMode);
+}
