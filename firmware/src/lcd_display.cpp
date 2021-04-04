@@ -3,11 +3,17 @@
 #include "hardware/i2c.h"
 #include "pico/time.h"
 
+
 #include <algorithm>
 #include <iomanip>
 #include <cstdlib>
+#include <cstring>
+#include <cstdio>
+#include <cstdarg>
 
-enum {
+
+namespace {
+enum LCDConstants : std::uint8_t {
 	LCDControlCommandMode = 0x00,
 	LCDControlCharacterMode = 0x01,
 	LCDControlReadMode = 0x02,
@@ -47,6 +53,7 @@ enum {
 
 	LCDCommandSetDDRAM = 0x80,
 };
+}
 
 
 LCDDisplay::LCDDisplay(std::uint8_t i2c_inst_num, std::uint32_t i2c_speed,
@@ -56,8 +63,8 @@ LCDDisplay::LCDDisplay(std::uint8_t i2c_inst_num, std::uint32_t i2c_speed,
                        bool backlight):
 	m_i2c_inst (i2c_inst_num == 0 ? *i2c0 : *i2c1),
 	m_i2c_addr (i2c_addr),
-	m_num_cols (num_cols),
 	m_num_lines (num_lines),
+	m_num_cols (num_cols),
 	m_backlight (backlight)
 {
 	// Init the i2c interface
@@ -121,88 +128,40 @@ void LCDDisplay::set_pos(std::uint8_t row, std::uint8_t col)
 	// For four lines LCD, There is only two lines in the controller
 	// brocken into four physical lines.
 	//
-	//                  Position   1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+	//                  Position   0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19
 	// Line 0 DDRAM Address(hex)  00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10 11 12 13
 	// Line 1 DDRAM Address(hex)  40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53
 	// Line 2 DDRAM Address(hex)  14 15 16 17 18 19 1a 1b 1c 1d 1e 1f 20 21 22 23 24 25 26 27
 	// Line 3 DDRAM Address(hex)  54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67
 	std::uint8_t const row_offsets[] = {0x00, 0x40, 0x14, 0x54};
 	row = std::min<std::uint8_t>(row, m_num_lines - 1);
-	col = std::min<std::uint8_t>(row, m_num_cols - 1);
+	col = std::min<std::uint8_t>(col, m_num_cols - 1);
 	std::uint8_t ddram = row_offsets[row] + col;
 	send_command(LCDCommandSetDDRAM | ddram);
 
 	std::setfill("0");
 }
 
+int LCDDisplay::putchar(std::uint8_t value)
+{
+	send_byte(value, LCDControlCharacterMode);
+	return value;
+}
+
 void LCDDisplay::write(const char *str)
 {
 	while(*str) {
-		send_char(*str++);
+		putchar(*str++);
 	}
 }
 
-void LCDDisplay::reset_format()
+void LCDDisplay::printf(const char *format, ...)
 {
-	m_format_width = 0;
-	m_format_fill = '\0';
-}
-
-LCDDisplay &LCDDisplay::operator<<(const char *str)
-{
-	write(str);
-	return *this;
-}
-
-LCDDisplay &LCDDisplay::operator<<(const std::string &str)
-{
-	write(str.c_str());
-	return *this;
-}
-
-LCDDisplay &LCDDisplay::operator<<(const int &num)
-{
-	char buffer1[32];
-	char buffer2[32];
-
-	if (m_format_fill) {
-		sprintf(buffer1, "%%0%dd", m_format_width);
-	}
-	else {
-		sprintf(buffer1, "%%%dd", m_format_width);
-	}
-
-	sprintf(buffer2, buffer1, num);
-
-	if (m_format_fill) {
-		char *pbuf = buffer2;
-		for(char *pbuf = buffer2; pbuf[0] != '\0'; pbuf++) {
-			if (pbuf[1] == '\0') break;
-			if (pbuf[0] == '0') {
-				pbuf[0] = m_format_fill;
-			}
-			else {
-				break;
-			}
-		}
-	}
-
-	write(buffer2);
-
-
-	return *this;
-}
-
-LCDDisplay &LCDDisplay::operator<<(const FormatFill &f)
-{
-	m_format_fill = f.m_c;
-	return *this;
-}
-
-LCDDisplay &LCDDisplay::operator<<(const FormatWidth &w)
-{
-	m_format_width = w.m_w;
-	return *this;
+	char buffer[32];
+	va_list ap;
+	va_start(ap, format);
+	vsnprintf(buffer, sizeof(buffer), format, ap);
+	write(buffer);
 }
 
 std::uint8_t LCDDisplay::get_backlight_state(void)
@@ -238,9 +197,4 @@ void LCDDisplay::send_byte(std::uint8_t value, std::uint8_t mode)
 void LCDDisplay::send_command(std::uint8_t value)
 {
 	send_byte(value, LCDControlCommandMode);
-}
-
-void LCDDisplay::send_char(std::uint8_t value)
-{
-	send_byte(value, LCDControlCharacterMode);
 }
