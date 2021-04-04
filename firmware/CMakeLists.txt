@@ -1,9 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
 
-# initialize pico-sdk from GIT
-# (note this can come from environment, CMake cache etc)
-set(PICO_SDK_FETCH_FROM_GIT on)
-
 # Get the sdk from the submodule pico-sdk
 include(pico-sdk/pico_sdk_init.cmake)
 
