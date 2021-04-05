@@ -28,7 +28,7 @@ public:
 	}
 
 private:
-	std::uint32_t get(void) const
+	inline std::uint32_t get(void) const
 	{
 		return gpio_get(m_gpio);
 	}
