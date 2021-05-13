@@ -180,6 +180,11 @@ void LCDDisplay::printf(const char *format, ...)
 	write(buffer);
 }
 
+void LCDDisplay::print(const std::string str)
+{
+	write(str.c_str());
+}
+
 std::uint8_t LCDDisplay::get_backlight_state(void)
 {
 	return m_backlight ? LCDControlBacklightOn : LCDControlBacklightOff;

@@ -45,6 +45,17 @@ public:
 	           std::uint8_t num_lines = 4, std::uint8_t num_cols = 20,
 	           bool backlight = true);
 
+
+	/**
+	 * Get number of lines
+	 */
+	std::uint8_t get_num_lines(void) const {return m_num_lines;}
+
+	/**
+	 * Get number of columns
+	 */
+	std::uint8_t get_num_cols(void) const {return m_num_cols;}
+
 	/**
 	 * Enable or disable the backlight
 	 */
@@ -64,26 +75,32 @@ public:
 	 * Set the position to given row and col.
 	 *
 	 * The row argument will be clipped to [0, m_num_lines-1] and col
-	* to [0, num_cols-1].
-	*/
-  void set_pos(std::uint8_t row, std::uint8_t col);
+	 * to [0, num_cols-1].
+	 */
+	void set_pos(std::uint8_t row, std::uint8_t col);
 
-  /**
-	* Write a single char to the screen at the current position, the
-	* position is incremented to the next column.
-	*/
-  int putchar(std::uint8_t value);
+	/**
+	 * Write a single char to the screen at the current position, the
+	 * position is incremented to the next column.
+	 */
+	int putchar(std::uint8_t value);
 
-  /**
-	* Write the given string to the screen at the current position.
-	*/
-  void write(const char *str);
+	/**
+	 * Write the given string to the screen at the current position.
+	 */
+	void write(const char *str);
 
-  /**
-	* Implementation of a printf method to write string format to the
-	* screen at the current position.
-	*/
+	/**
+	 * Implementation of a printf method to write string format to the
+	 * screen at the current position.
+	 */
 	void printf(const char *format, ...);
+
+	/**
+	 * Print the string at the current position.
+	 */
+	void print(const std::string str);
+
 
 private:
 	/**
