@@ -75,7 +75,7 @@ enum LCDConstants : std::uint8_t {
 LCDDisplay::LCDDisplay(std::uint8_t i2c_inst_num, std::uint32_t i2c_speed,
                        std::uint8_t i2c_addr, std::uint8_t sda_pin,
                        std::uint8_t scl_pin, bool pullup,
-                       std::uint8_t num_cols, std::uint8_t num_lines,
+                       std::uint8_t num_lines, std::uint8_t num_cols,
                        bool backlight):
 	m_i2c_inst (i2c_inst_num == 0 ? *i2c0 : *i2c1),
 	m_i2c_addr (i2c_addr),
