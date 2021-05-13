@@ -29,6 +29,7 @@ pico_sdk_init()
 add_executable(tig_welder
   src/main.cpp
   src/lcd_display.cpp
+  src/lcd_menu.cpp
   src/rotary_encoder.cpp
   src/spi_adc.cpp
   src/buzzer.cpp)

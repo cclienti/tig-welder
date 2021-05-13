@@ -15,14 +15,17 @@
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 #include "tig-welder/lcd_display.h"
+#include "tig-welder/lcd_menu.h"
 #include "tig-welder/relay.h"
 #include "tig-welder/switch.h"
 #include "tig-welder/rotary_encoder.h"
 #include "tig-welder/spi_adc.h"
 #include "tig-welder/buzzer.h"
+#include "tig-welder/lcd_menu.h"
 
 #include <cstdio>
 #include <cstring>
+#include <memory>
 
 
 int main(void)
@@ -33,17 +36,19 @@ int main(void)
 	Relay hf_spark(8, true);
 	Switch red_switch(10, true);
 	Switch black_switch(11, true);
-	Switch coder_switch(14, true);
-
-	LCDDisplay lcd;
-	lcd.clear();
-	lcd.home();
-
-	RotaryEncoder encoder(12, 13, 0);
-	encoder.set_rotation(0);
-
 	SPIADC adc;
-	Buzzer buzzer;
+
+	auto lcd_display = std::make_unique<LCDDisplay>();
+	auto lcd_encoder = std::make_unique<RotaryEncoder>(12, 13, 0);
+	auto lcd_button = std::make_unique<Switch>(14, true);
+	auto buzzer = std::make_shared<Buzzer>();
+
+	float pre_flow = 0.5;
+	float post_flow = 0.5;
+	LCDMenu lcd_menu(std::move(lcd_display), std::move(lcd_encoder),
+	                 std::move(lcd_button), buzzer);
+	lcd_menu.register_entry("Pre Flow", pre_flow, 1, 10.0, 0.1, "s");
+	lcd_menu.register_entry("Post Flow", post_flow, 5, 10.0, 0.1, "s");
 
 	// buzzer.melody(
 	// 	 {
@@ -61,36 +66,22 @@ int main(void)
 	// 	 }
 	// );
 
-	buzzer.error();
-
 	while(1)
 	{
 		static int redcnt{0};
 		static int blackcnt{0};
 
+		lcd_menu.refresh();
+
 		if (black_switch.is_released()) {
-			buzzer.error();
+			buzzer->error();
 			blackcnt +=1;
 		}
 
 		if (red_switch.is_released()) {
-			buzzer.valid();
+			buzzer->valid();
 			redcnt += 1;
 		}
-
-		if (coder_switch.is_released()) {
-			buzzer.warning();
-		}
-
-		lcd.set_pos(0, 0);
-		lcd.printf("Black switch = %05d", blackcnt);
-		lcd.set_pos(1, 0);
-		lcd.printf("Red switch   = %05d", redcnt);
-		lcd.set_pos(2, 0);
-		std::uint16_t adc_value = adc.read_single(0);
-		lcd.printf("ADC chan0    = %05d", adc_value);
-		lcd.set_pos(3, 0);
-		lcd.printf("Encoder      = %05d", encoder.get_rotation());
 
 		if (blackcnt % 2 == 1) solenoid.enable();
 		else solenoid.disable();
