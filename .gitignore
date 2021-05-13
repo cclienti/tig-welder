@@ -18,7 +18,7 @@ compile_commands.json
 ### Python
 __pycache__
 *.pyc
-
+*.ipynb_checkpoints
 
 ### kicad files
 *.*-bak
@@ -29,3 +29,5 @@ sym-lib-table
 gerber*/
 *.zip
 log*/
+*-rescue.dcm
+*-rescue.lib
