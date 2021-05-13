@@ -1,4 +1,4 @@
-update=Sun 21 Mar 2021 11:07:08 CET
+update=Wed 21 Apr 2021 12:00:17 CEST
 version=1
 last_client=kicad
 [general]
@@ -12,16 +12,6 @@ NetIExt=net
 version=1
 LibDir=
 [eeschema/libraries]
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=Pcbnew
-SpiceAjustPassiveValues=0
-LabSize=50
-ERC_TestSimilarLabels=1
 [pcbnew]
 version=1
 PageLayoutDescrFile=
@@ -39,21 +29,12 @@ MinMicroViaDiameter=0.2
 MinMicroViaDrill=0.09999999999999999
 MinHoleToHole=0.25
 TrackWidth1=0.25
-TrackWidth2=0.5
-TrackWidth3=0.8
-TrackWidth4=1.27
-TrackWidth5=2
-TrackWidth6=3
-TrackWidth7=3.5
-TrackWidth8=4
-TrackWidth9=5
-TrackWidth10=6
+TrackWidth2=0.8
+TrackWidth3=2.5
 ViaDiameter1=0.8
 ViaDrill1=0.4
-ViaDiameter2=2.54
+ViaDiameter2=1.2
 ViaDrill2=0.8
-ViaDiameter3=4.5
-ViaDrill3=3
 dPairWidth1=0.2
 dPairGap1=0.25
 dPairViaGap1=0.25
