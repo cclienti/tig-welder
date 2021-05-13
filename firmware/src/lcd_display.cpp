@@ -154,8 +154,6 @@ void LCDDisplay::set_pos(std::uint8_t row, std::uint8_t col)
 	col = std::min<std::uint8_t>(col, m_num_cols - 1);
 	std::uint8_t ddram = row_offsets[row] + col;
 	send_command(LCDCommandSetDDRAM | ddram);
-
-	std::setfill("0");
 }
 
 int LCDDisplay::putchar(std::uint8_t value)
