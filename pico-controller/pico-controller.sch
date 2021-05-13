@@ -5,8 +5,8 @@ $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
 Title "TIG Welder Pico Controler"
-Date "2021-02-24"
-Rev "1.1"
+Date "2021-04-28"
+Rev "1.2"
 Comp "Christophe Clienti"
 Comment1 ""
 Comment2 ""
@@ -1731,8 +1731,6 @@ $EndComp
 Wire Wire Line
 	8400 9050 8400 8900
 Wire Wire Line
-	8400 8500 8400 8400
-Wire Wire Line
 	8400 8200 8600 8200
 Wire Wire Line
 	8600 8100 8400 8100
@@ -2824,19 +2822,6 @@ Text Label 10950 3450 0    50   ~ 0
 PWM_SPEAKER
 Wire Wire Line
 	11800 3450 10950 3450
-$Comp
-L power:+15V #PWR039
-U 1 1 6116D6EA
-P 8400 7750
-F 0 "#PWR039" H 8400 7600 50  0001 C CNN
-F 1 "+15V" H 8415 7923 50  0000 C CNN
-F 2 "" H 8400 7750 50  0001 C CNN
-F 3 "" H 8400 7750 50  0001 C CNN
-	1    8400 7750
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	8400 7750 8400 7900
 Wire Wire Line
 	7800 8700 7150 8700
 Text Label 7150 8700 0    50   ~ 0
@@ -3501,7 +3486,7 @@ $EndComp
 Wire Wire Line
 	2550 9100 2550 9200
 $Comp
-L RPi_Pico:Pico U4
+L pico-controller-rescue:Pico-RPi_Pico U4
 U 1 1 601A607B
 P 12500 2500
 F 0 "U4" H 12500 3715 50  0000 C CNN
@@ -3575,31 +3560,6 @@ F 3 "" H 15150 2150 50  0001 C CNN
 	1    15150 2150
 	1    0    0    -1  
 $EndComp
-$Comp
-L Diode:STTH212U D1
-U 1 1 6060E5BE
-P 8200 8150
-F 0 "D1" V 8246 8070 50  0000 R CNN
-F 1 "STTH212U" V 8155 8070 50  0000 R CNN
-F 2 "Diode_SMD:D_SMB" H 8200 7975 50  0001 C CNN
-F 3 "https://www.st.com/resource/en/datasheet/stth212.pdf" H 8200 8150 50  0001 C CNN
-	1    8200 8150
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	8200 8300 8200 8400
-Wire Wire Line
-	8200 8400 8400 8400
-Connection ~ 8400 8400
-Wire Wire Line
-	8400 8400 8400 8200
-Wire Wire Line
-	8200 8000 8200 7900
-Wire Wire Line
-	8200 7900 8400 7900
-Connection ~ 8400 7900
-Wire Wire Line
-	8400 7900 8400 8100
 Wire Wire Line
 	13200 2750 13300 2750
 Connection ~ 13300 2750
@@ -3667,4 +3627,21 @@ F 3 "https://www.onsemi.com/pub/Collateral/BC818-D.pdf" H 8900 3550 50  0001 L C
 	1    8900 3550
 	1    0    0    -1  
 $EndComp
+$Comp
+L power:+5V #PWR0110
+U 1 1 60967A54
+P 8400 7750
+F 0 "#PWR0110" H 8400 7600 50  0001 C CNN
+F 1 "+5V" H 8415 7923 50  0000 C CNN
+F 2 "" H 8400 7750 50  0001 C CNN
+F 3 "" H 8400 7750 50  0001 C CNN
+	1    8400 7750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8400 8200 8400 8500
+Wire Wire Line
+	8400 7750 8400 8100
+Text Notes 8700 7900 0    50   ~ 0
+Mount\nfree wheel diode\non Speaker
 $EndSCHEMATC
