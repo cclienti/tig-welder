@@ -25,7 +25,7 @@ class RotaryEncoder
 public:
 	RotaryEncoder(std::uint32_t pin_a, std::uint32_t pin_b, std::uint32_t sm=0);
 
-	void set_rotation(int rotation) {s_rotation = rotation;}
+	void set_rotation(int rotation) {s_rotation = rotation<<2;}
 
 	int get_rotation(void) const {return s_rotation>>2;}
 
