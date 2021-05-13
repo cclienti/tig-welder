@@ -25,7 +25,10 @@ Buzzer::Buzzer(std::uint32_t pin) :
 	m_pin (pin),
 	m_pwm_slice (pwm_gpio_to_slice_num(pin))
 {
-	gpio_set_function(pin, GPIO_FUNC_PWM);
+	gpio_set_function(m_pin, GPIO_FUNC_PWM);
+
+	pwm_set_gpio_level(m_pin, 0);
+	pwm_set_enabled(m_pwm_slice, true);
 
 	float divider;
 	divider = clock_get_hz(clk_sys) / m_tref;
@@ -78,13 +81,12 @@ const Buzzer::Melody &Buzzer::pop_note(void)
 void Buzzer::buzz(Note note)
 {
 	std::uint8_t duty_cycle = 128;
-
 	std::int32_t top;
 
 	auto freq = static_cast<std::uint32_t>(note);
 
 	if (freq == 0) {
-		pwm_set_enabled(m_pwm_slice, false);
+		pwm_set_gpio_level(m_pin, 0);
 		return;
 	}
 
@@ -102,7 +104,6 @@ void Buzzer::buzz(Note note)
 
 	pwm_set_wrap(m_pwm_slice, top);
 	pwm_set_gpio_level(m_pin, top / 2);
-	pwm_set_enabled(m_pwm_slice, true);
 }
 
 
@@ -111,7 +112,7 @@ std::int64_t Buzzer::timer_callback(alarm_id_t id, void *context)
 	Buzzer &instance = *reinterpret_cast<Buzzer*>(context);
 
 	if (instance.m_melody_counter == 0) {
-		pwm_set_enabled(instance.m_pwm_slice, false);
+		pwm_set_gpio_level(instance.m_pin, 0);
 		instance.m_lock = false;
 		return 0;
 	}
