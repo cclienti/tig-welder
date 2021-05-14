@@ -20,7 +20,11 @@
 #include "tig-welder/switch.h"
 #include "tig-welder/buzzer.h"
 
+#include <sstream>
+#include <iomanip>
 #include <algorithm>
+#include <cmath>
+
 
 class MenuEntryBase
 {
@@ -105,6 +109,7 @@ public:
 		m_max         (max),
 		m_precision   (precision),
 		m_inv_prec    (1/precision),
+		m_num_decimal (static_cast<int>(std::ceil(std::log10(m_inv_prec)))),
 		m_unit        (unit)
 	{
 	}
@@ -114,6 +119,7 @@ public:
 	float get_min(void) const {return m_min;}
 	float get_max(void) const {return m_max;}
 	float get_precision(void) const {return m_precision;}
+	float get_num_decimal(void) const {return m_num_decimal;}
 	const std::string &get_unit(void) const {return m_unit;}
 
 	void set_value(float value) {m_variable = std::min(std::max(value, m_min), m_max);}
@@ -125,25 +131,27 @@ private:
 	const float m_max;
 	const float m_precision;
 	const float m_inv_prec;
+	const int m_num_decimal;
 	const std::string m_unit;
 };
 
 
 LCDMenu::LCDMenu(LCDDisplayUPtr lcd_display, RotaryEncoderUPtr rotary_encoder,
-                 SwitchUPtr button, BuzzerSPtr buzzer):
+                 SwitchUPtr button, BuzzerSPtr buzzer, std::uint8_t title_line,
+	        std::uint8_t value_line):
 	m_lcd_display    (std::move(lcd_display)),
 	m_rotary_encoder (std::move(rotary_encoder)),
 	m_button         (std::move(button)),
 	m_buzzer         (buzzer),
 	m_menu_entry_id  (0),
 	m_change_value   (false),
-	m_sound_enable   (true)
+	m_title_line     (title_line),
+	m_value_line     (value_line)
 {
 	m_rotary_encoder->set_rotation(0);
 	m_lcd_display->clear();
 	m_lcd_display->home();
 
-	register_entry("Sound Enable", m_sound_enable);
 	refresh(true);
 }
 
@@ -258,9 +266,11 @@ void LCDMenu::refresh(bool force)
 				}
 			}
 
+			std::stringstream ss;
 			value = float_entry->get_value();
-			m_lcd_display->set_pos(2, 0);
-			m_lcd_display->print(format_value(std::to_string(value) + float_entry->get_unit()));
+			ss << std::setprecision(float_entry->get_num_decimal()) << std::fixed << value;
+			m_lcd_display->set_pos(m_value_line, 0);
+			m_lcd_display->print(format_value(ss.str() + float_entry->get_unit()));
 		}
 		break;
 
