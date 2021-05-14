@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-#include "tig-welder/lcd_display.h"
+
 #include "tig-welder/lcd_menu.h"
 #include "tig-welder/relay.h"
 #include "tig-welder/switch.h"
 #include "tig-welder/rotary_encoder.h"
 #include "tig-welder/spi_adc.h"
 #include "tig-welder/buzzer.h"
-#include "tig-welder/lcd_menu.h"
+
 
 #include <cstdio>
 #include <cstring>
@@ -43,12 +43,14 @@ int main(void)
 	auto lcd_button = std::make_unique<Switch>(14, true);
 	auto buzzer = std::make_shared<Buzzer>();
 
-	float pre_flow = 0.5;
-	float post_flow = 0.5;
+	float pre_flow = 1;
+	float post_flow = 5;
+	bool mute = false;
 	LCDMenu lcd_menu(std::move(lcd_display), std::move(lcd_encoder),
 	                 std::move(lcd_button), buzzer);
+	lcd_menu.register_entry("Mute", mute);
+	lcd_menu.register_entry("Post Flow", post_flow, 1, 10.0, 0.1, "s");
 	lcd_menu.register_entry("Pre Flow", pre_flow, 1, 10.0, 0.1, "s");
-	lcd_menu.register_entry("Post Flow", post_flow, 5, 10.0, 0.1, "s");
 
 	// buzzer.melody(
 	// 	 {
@@ -72,6 +74,11 @@ int main(void)
 		static int blackcnt{0};
 
 		lcd_menu.refresh();
+		if (mute) {
+			buzzer->mute();
+		} else if (buzzer->is_muted()) {
+			buzzer->unmute();
+		}
 
 		if (black_switch.is_released()) {
 			buzzer->error();
