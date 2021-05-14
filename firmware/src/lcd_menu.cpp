@@ -76,7 +76,8 @@ public:
 		MenuEntryBase (title, Type::Int),
 		m_variable    (variable),
 		m_min         (min),
-		m_max         (max)
+		m_max         (max),
+		m_unit        (unit)
 	{
 	}
 
@@ -109,7 +110,7 @@ public:
 		m_max         (max),
 		m_precision   (precision),
 		m_inv_prec    (1/precision),
-		m_num_decimal (static_cast<int>(std::ceil(std::log10(m_inv_prec)))),
+		m_num_decimal (std::max(static_cast<int>(std::ceil(std::log10(m_inv_prec))), 0)),
 		m_unit        (unit)
 	{
 	}
@@ -138,7 +139,7 @@ private:
 
 LCDMenu::LCDMenu(LCDDisplayUPtr lcd_display, RotaryEncoderUPtr rotary_encoder,
                  SwitchUPtr button, BuzzerSPtr buzzer, std::uint8_t title_line,
-	        std::uint8_t value_line):
+                 std::uint8_t value_line):
 	m_lcd_display    (std::move(lcd_display)),
 	m_rotary_encoder (std::move(rotary_encoder)),
 	m_button         (std::move(button)),
@@ -243,22 +244,22 @@ void LCDMenu::refresh(bool force)
 
 	case MenuEntryBool::Type::Int:
 		{
-			const auto &float_entry = std::static_pointer_cast<MenuEntryFloat>(entry);
-			float value;
+			const auto &int_entry = std::static_pointer_cast<MenuEntryInt>(entry);
+			int value;
 
 			if (m_change_value) {
 				value = m_rotary_encoder->get_rotation();
-				float_entry->set_value(value);
-				if (value != float_entry->get_value()) {
+				int_entry->set_value(value);
+				if (value != int_entry->get_value()) {
 					// The set_value clipped the value, we update the rotary
 					// encoder back.
-					m_rotary_encoder->set_rotation(float_entry->get_encoder());
+					m_rotary_encoder->set_rotation(int_entry->get_encoder());
 				}
 			}
 
-			value = float_entry->get_value();
+			value = int_entry->get_value();
 			m_lcd_display->set_pos(m_value_line, 0);
-			m_lcd_display->print(format_value(std::to_string(value) + float_entry->get_unit()));
+			m_lcd_display->print(format_value(std::to_string(value) + int_entry->get_unit()));
 		}
 		break;
 
@@ -279,17 +280,16 @@ void LCDMenu::refresh(bool force)
 
 			std::stringstream ss;
 			value = float_entry->get_value();
-			ss << std::setprecision(float_entry->get_num_decimal()) << std::fixed << value;
+			ss << std::setprecision(float_entry->get_num_decimal())
+			   << std::fixed << value << float_entry->get_unit();
 			m_lcd_display->set_pos(m_value_line, 0);
-			m_lcd_display->print(format_value(ss.str() + float_entry->get_unit()));
+			m_lcd_display->print(format_value(ss.str()));
 		}
 		break;
 
 	default:
 		break;
 	}
-
-
 }
 
 
