@@ -18,6 +18,11 @@
 #define TIG_WELDER_LCD_MENU_H
 
 
+#include "lcd_display.h"
+#include "rotary_encoder.h"
+#include "switch.h"
+#include "buzzer.h"
+
 #include <memory>
 #include <functional>
 #include <vector>
@@ -25,17 +30,12 @@
 #include <iostream>
 #include <cstdint>
 
-
-class LCDDisplay;
-class RotaryEncoder;
-class Switch;
-class Buzzer;
 class MenuEntryBase;
-
 
 class LCDMenu final
 {
 public:
+
 	// enum class CbParam {Inc, Dec, Refresh};
 	// using Callback = std::function<std::string(CbParam)>;
 
