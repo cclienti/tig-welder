@@ -156,6 +156,15 @@ LCDMenu::LCDMenu(LCDDisplayUPtr lcd_display, RotaryEncoderUPtr rotary_encoder,
 }
 
 
+void LCDMenu::splash(std::string text)
+{
+	m_lcd_display->clear();
+	m_lcd_display->home();
+	m_lcd_display->set_pos(m_lcd_display->get_num_cols()/2, 0);
+	m_lcd_display->print(format_splash(text));
+}
+
+
 void LCDMenu::register_entry(const std::string &title, bool &variable)
 {
 	auto menu_title = format_title(title);
@@ -321,4 +330,25 @@ std::string LCDMenu::format_value(std::string value)
 	menu_value.replace(padding, value_.size(), value_);
 
 	return menu_value;
+}
+
+
+std::string LCDMenu::format_splash(std::string title)
+{
+	int num_cols = m_lcd_display->get_num_cols();
+	int title_len = title.size();
+
+	std::string title_ = title;
+	if (title_len > num_cols - 4) {
+		title_.resize(num_cols-4);
+	}
+	title_.insert(0, "=[");
+	title_ += "]=";
+
+	int padding = (num_cols - title_.size()) / 2;
+
+	std::string menu_title(num_cols, '=');
+	menu_title.replace(padding, title_.size(), title_);
+
+	return menu_title;
 }
