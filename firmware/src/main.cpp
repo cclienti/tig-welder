@@ -27,6 +27,15 @@
 #include <cstring>
 #include <memory>
 
+struct WeldingParams
+{
+	float pre_flow{0.0};
+	float post_flow{5.0};
+	float start_ramp{0.0};
+	float end_ramp{0.0};
+	int current{40};
+};
+
 
 int main(void)
 {
@@ -43,14 +52,16 @@ int main(void)
 	auto lcd_button = std::make_unique<Switch>(14, true);
 	auto buzzer = std::make_shared<Buzzer>();
 
-	float pre_flow = 1;
-	float post_flow = 5;
-	bool mute = false;
 	LCDMenu lcd_menu(std::move(lcd_display), std::move(lcd_encoder),
 	                 std::move(lcd_button), buzzer);
+	WeldingParams welding_params;
+	bool mute = false;
 	lcd_menu.register_entry("Mute", mute);
-	lcd_menu.register_entry("Post Flow", post_flow, 1, 10.0, 0.1, "s");
-	lcd_menu.register_entry("Pre Flow", pre_flow, 1, 10.0, 0.1, "s");
+	lcd_menu.register_entry("Post Flow", welding_params.post_flow, 1, 10.0, 0.1, "s");
+	lcd_menu.register_entry("End Ramp", welding_params.end_ramp, 0, 10.0, 0.1, "s");
+	lcd_menu.register_entry("Current", welding_params.current, 5, 200, "A");
+	lcd_menu.register_entry("Start Ramp", welding_params.start_ramp, 0, 10.0, 0.1, "s");
+	lcd_menu.register_entry("Pre Flow", welding_params.pre_flow, 1, 10.0, 0.1, "s");
 
 	// buzzer.melody(
 	// 	 {
