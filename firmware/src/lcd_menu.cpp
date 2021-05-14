@@ -204,7 +204,7 @@ void LCDMenu::refresh(bool force)
 		m_menu_entry_id = m_rotary_encoder->get_rotation() % m_menu_entries.size();
 	}
 
-	m_lcd_display->set_pos(0, 0);
+	m_lcd_display->set_pos(m_title_line, 0);
 	m_lcd_display->print(entry->get_title());
 
 	switch (entry->get_type()) {
@@ -219,7 +219,7 @@ void LCDMenu::refresh(bool force)
 			}
 
 			value = bool_entry->get_value();
-			m_lcd_display->set_pos(2, 0);
+			m_lcd_display->set_pos(m_value_line, 0);
 
 			if (value) {
 				m_lcd_display->print(format_value("yes"));
@@ -246,7 +246,7 @@ void LCDMenu::refresh(bool force)
 			}
 
 			value = float_entry->get_value();
-			m_lcd_display->set_pos(2, 0);
+			m_lcd_display->set_pos(m_value_line, 0);
 			m_lcd_display->print(format_value(std::to_string(value) + float_entry->get_unit()));
 		}
 		break;

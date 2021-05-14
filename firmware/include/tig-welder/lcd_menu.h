@@ -45,7 +45,8 @@ public:
 	using BuzzerSPtr = std::shared_ptr<Buzzer>;
 
 	LCDMenu(LCDDisplayUPtr lcd_display, RotaryEncoderUPtr rotary_encoder,
-	        SwitchUPtr button, BuzzerSPtr buzzer);
+	        SwitchUPtr button, BuzzerSPtr buzzer, std::uint8_t title_line=0,
+	        std::uint8_t value_line=2);
 
 	void register_entry(const std::string &title, bool &variable);
 	void register_entry(const std::string &title, int &variable,
@@ -69,7 +70,9 @@ private:
 	std::vector<std::shared_ptr<MenuEntryBase>> m_menu_entries;
 	std::size_t m_menu_entry_id;
 	bool m_change_value;
-	bool m_sound_enable;
+
+	std::uint8_t m_title_line;
+	std::uint8_t m_value_line;
 };
 
 
