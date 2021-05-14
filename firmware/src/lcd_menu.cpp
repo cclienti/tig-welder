@@ -168,9 +168,10 @@ void LCDMenu::register_entry(const std::string &title, int &variable, int min, i
                              const std::string &unit)
 {
 	auto menu_title = format_title(title);
-	m_menu_entries.insert(m_menu_entries.begin(),
-	                      std::make_shared<MenuEntryInt>(menu_title, variable,
-	                                                     min, max, unit));
+	auto menu_entry = std::make_shared<MenuEntryInt>(menu_title, variable,
+	                                                 min, max, unit);
+	menu_entry->set_value(menu_entry->get_value());
+	m_menu_entries.insert(m_menu_entries.begin(), std::move(menu_entry));
 }
 
 
@@ -179,9 +180,10 @@ void LCDMenu::register_entry(const std::string &title, float &variable,
                              const std::string &unit)
 {
 	auto menu_title = format_title(title);
-	m_menu_entries.insert(m_menu_entries.begin(),
-	                      std::make_shared<MenuEntryFloat>(menu_title, variable,
-	                                                       min, max, precision, unit));
+	auto menu_entry = std::make_shared<MenuEntryFloat>(menu_title, variable,
+	                                                   min, max, precision, unit);
+	menu_entry->set_value(menu_entry->get_value());
+	m_menu_entries.insert(m_menu_entries.begin(), menu_entry);
 }
 
 
