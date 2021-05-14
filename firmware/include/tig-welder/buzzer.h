@@ -48,13 +48,14 @@ public:
 public:
 	Buzzer(std::uint32_t pin=15);
 
+	void mute(void) {m_muted = true;}
+	void unmute(void) {m_muted = false;}
+	bool is_muted(void) const {return m_muted;}
+
 	void melody(const std::vector<Melody> &melody);
-
-	void error();
-
-	void valid();
-
-	void warning();
+	void error(void);
+	void valid(void);
+	void warning(void);
 
 private:
 	void buzz(Note note);
@@ -66,6 +67,7 @@ private:
 
 private:
 	static constexpr std::uint32_t m_tref = 1'000'000;
+	bool m_muted{false};
 
 	std::uint32_t m_pin;
 	std::uint32_t m_pwm_slice;

@@ -94,16 +94,13 @@ void Buzzer::buzz(Note note)
 	top = (top < 0) ? 0 : top;
 	top = (top > 65535) ? 65535 : top;
 
-	// std::int32_t level;
-	// level = top + 1;
-	// level = level * duty_cycle;
-	// level = level >> (8*sizeof(duty_cycle));
-	// level = level - 1;
-	// level = (level < 0) ? 0 : level;
-	// level = (level >= top/2) ? (top/2 - 1) : level;
-
 	pwm_set_wrap(m_pwm_slice, top);
-	pwm_set_gpio_level(m_pin, top / 2);
+	if (m_muted) {
+		pwm_set_gpio_level(m_pin, 0);
+	}
+	else {
+		pwm_set_gpio_level(m_pin, top / 2);
+	}
 }
 
 
