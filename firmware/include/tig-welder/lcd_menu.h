@@ -30,14 +30,16 @@
 #include <iostream>
 #include <cstdint>
 
+
+// Forward declaration of private classes
 class MenuEntryBase;
+class FooterNoteBase;
+
 
 class LCDMenu final
 {
 public:
-
-	// enum class CbParam {Inc, Dec, Refresh};
-	// using Callback = std::function<std::string(CbParam)>;
+	enum class FooterPosition {Left, Right};
 
 	using LCDDisplayUPtr = std::unique_ptr<LCDDisplay>;
 	using RotaryEncoderUPtr = std::unique_ptr<RotaryEncoder>;
@@ -45,8 +47,7 @@ public:
 	using BuzzerSPtr = std::shared_ptr<Buzzer>;
 
 	LCDMenu(LCDDisplayUPtr lcd_display, RotaryEncoderUPtr rotary_encoder,
-	        SwitchUPtr button, BuzzerSPtr buzzer, std::uint8_t title_line=0,
-	        std::uint8_t value_line=2);
+	        SwitchUPtr button, BuzzerSPtr buzzer);
 
 	void splash(std::string text);
 
@@ -57,9 +58,21 @@ public:
 	                    float min, float max, float precision,
 	                    const std::string &unit);
 
-	void refresh(bool force=false);
+	void register_footer(FooterPosition position,
+	                     const std::string &text, const bool &variable);
+	void register_footer(FooterPosition position,
+	                     const std::string &text, const int &variable,
+	                     const std::string &unit);
+	void register_footer(FooterPosition position,
+	                     const std::string &text, const float &variable,
+	                     float precision, const std::string &unit);
+
+	void refresh();
 
 private:
+	void refresh_menu();
+	void refresh_footer();
+
 	std::string format_title(std::string title);
 	std::string format_value(std::string value);
 	std::string format_splash(std::string value);
@@ -71,11 +84,13 @@ private:
 	BuzzerSPtr m_buzzer;
 
 	std::vector<std::shared_ptr<MenuEntryBase>> m_menu_entries;
+	std::shared_ptr<FooterNoteBase> m_footer_left;
+	std::shared_ptr<FooterNoteBase> m_footer_right;
+
 	std::size_t m_menu_entry_id;
 	bool m_change_value;
 
-	std::uint8_t m_title_line;
-	std::uint8_t m_value_line;
+	const std::string m_footer_separator;
 };
 
 

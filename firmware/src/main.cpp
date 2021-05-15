@@ -52,6 +52,9 @@ int main(void)
 	auto lcd_button = std::make_unique<Switch>(14, true);
 	auto buzzer = std::make_shared<Buzzer>();
 
+	int redcnt{0};
+	int blackcnt{0};
+
 	LCDMenu lcd_menu(std::move(lcd_display), std::move(lcd_encoder),
 	                 std::move(lcd_button), buzzer);
 	WeldingParams welding_params;
@@ -63,6 +66,10 @@ int main(void)
 	lcd_menu.register_entry("Start Ramp", welding_params.start_ramp, 0, 10.0, 0.1, "s");
 	lcd_menu.register_entry("Pre Flow", welding_params.pre_flow, 1, 10.0, 0.1, "s");
 
+	lcd_menu.register_footer(LCDMenu::FooterPosition::Left,
+	                         "red", redcnt, "N");
+	lcd_menu.register_footer(LCDMenu::FooterPosition::Right,
+	                         "black", blackcnt, "N");
 	// buzzer.melody(
 	// 	 {
 	// 		 {Buzzer::Note::Sol, 500},  {Buzzer::Note::Silence, 100},
@@ -81,9 +88,6 @@ int main(void)
 
 	while(1)
 	{
-		static int redcnt{0};
-		static int blackcnt{0};
-
 		lcd_menu.refresh();
 		if (mute) {
 			buzzer->mute();

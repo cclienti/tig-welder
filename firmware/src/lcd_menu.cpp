@@ -24,6 +24,15 @@
 #include <iomanip>
 #include <algorithm>
 #include <cmath>
+#include <stdint.h>
+
+
+namespace {
+constexpr std::uint8_t g_title_line{0};
+constexpr std::uint8_t g_value_line{1};
+constexpr std::uint8_t g_separator_line{2};
+constexpr std::uint8_t g_footer_line{3};
+}
 
 
 class MenuEntryBase
@@ -137,23 +146,129 @@ private:
 };
 
 
+class FooterNoteBase
+{
+public:
+	enum class Type {Void, Bool, Int, Float};
+
+	FooterNoteBase(Type type, std::uint8_t width, const std::string &text):
+		m_type  (type),
+		m_width (width),
+		m_text  (text)
+	{
+	}
+
+	virtual std::string get_display(void)
+	{
+		std::string fmttext = m_text + ": " + get_value();
+		fmttext.resize(m_width, ' ');
+		return fmttext;
+	}
+
+protected:
+	virtual std::string get_value(void) = 0;
+
+private:
+	const Type m_type;
+	const std::uint8_t m_width;
+	const std::string m_text;
+};
+
+class FooterNoteBool: public FooterNoteBase
+{
+public:
+	FooterNoteBool(std::uint8_t width, const std::string &text, const bool &variable):
+		FooterNoteBase (FooterNoteBase::Type::Bool, width, text),
+		m_variable     (variable)
+	{
+	}
+
+private:
+	std::string get_value(void) final
+	{
+		if (m_variable) {
+			return "yes";
+		}
+		else {
+			return "no";
+		}
+	}
+
+private:
+	const bool &m_variable;
+};
+
+class FooterNoteInt: public FooterNoteBase
+{
+public:
+	FooterNoteInt(std::uint8_t width, const std::string &text, const int &variable,
+	              const std::string &unit):
+		FooterNoteBase (FooterNoteBase::Type::Int, width, text),
+		m_variable     (variable),
+		m_unit         (unit)
+	{
+	}
+
+private:
+	std::string get_value(void) final
+	{
+		return std::to_string(m_variable) + m_unit;
+	}
+
+private:
+	const int &m_variable;
+	const std::string m_unit;
+};
+
+class FooterNoteFloat: public FooterNoteBase
+{
+public:
+	FooterNoteFloat(std::uint8_t width, const std::string &text,
+	                const float &variable, float precision,
+	                const std::string &unit):
+		FooterNoteBase (FooterNoteBase::Type::Float, width, text),
+		m_variable     (variable),
+		m_precision   (precision),
+		m_inv_prec    (1/precision),
+		m_num_decimal (std::max(static_cast<int>(std::ceil(std::log10(m_inv_prec))), 0)),
+		m_unit         (unit)
+	{
+	}
+
+private:
+	std::string get_value(void) final
+	{
+		std::stringstream ss;
+		ss << std::setprecision(m_num_decimal)
+		   << std::fixed << m_variable << m_unit;
+		return ss.str();
+	}
+
+private:
+	const float &m_variable;
+	const float m_precision;
+	const float m_inv_prec;
+	const int m_num_decimal;
+	const std::string m_unit;
+};
+
+
+
 LCDMenu::LCDMenu(LCDDisplayUPtr lcd_display, RotaryEncoderUPtr rotary_encoder,
-                 SwitchUPtr button, BuzzerSPtr buzzer, std::uint8_t title_line,
-                 std::uint8_t value_line):
-	m_lcd_display    (std::move(lcd_display)),
-	m_rotary_encoder (std::move(rotary_encoder)),
-	m_button         (std::move(button)),
-	m_buzzer         (buzzer),
-	m_menu_entry_id  (0),
-	m_change_value   (false),
-	m_title_line     (title_line),
-	m_value_line     (value_line)
+                 SwitchUPtr button, BuzzerSPtr buzzer):
+	m_lcd_display      (std::move(lcd_display)),
+	m_rotary_encoder   (std::move(rotary_encoder)),
+	m_button           (std::move(button)),
+	m_buzzer           (buzzer),
+	m_menu_entry_id    (0),
+	m_change_value     (false),
+	m_footer_separator (static_cast<std::size_t>(m_lcd_display->get_num_cols()), '-')
 {
 	m_rotary_encoder->set_rotation(0);
 	m_lcd_display->clear();
 	m_lcd_display->home();
 
-	refresh(true);
+	refresh();
 }
 
 
@@ -196,9 +311,61 @@ void LCDMenu::register_entry(const std::string &title, float &variable,
 	m_menu_entries.insert(m_menu_entries.begin(), menu_entry);
 }
 
-
-void LCDMenu::refresh(bool force)
+void LCDMenu::register_footer(FooterPosition position,
+                              const std::string &text, const bool &variable)
 {
+	const auto &note = std::make_shared<FooterNoteBool>(m_lcd_display->get_num_cols()/2-1,
+	                                                    text, variable);
+	if (position == FooterPosition::Left) {
+		m_footer_left = note;
+	}
+	else {
+		m_footer_right = note;
+	}
+}
+
+void LCDMenu::register_footer(FooterPosition position,
+                              const std::string &text, const int &variable,
+                              const std::string &unit)
+{
+	const auto &note = std::make_shared<FooterNoteInt>(m_lcd_display->get_num_cols()/2-1,
+	                                                    text, variable, unit);
+	if (position == FooterPosition::Left) {
+		m_footer_left = note;
+	}
+	else {
+		m_footer_right = note;
+	}
+}
+
+void LCDMenu::register_footer(FooterPosition position,
+                              const std::string &text,
+                              const float &variable, float precision,
+                              const std::string &unit)
+{
+	const auto &note = std::make_shared<FooterNoteFloat>(m_lcd_display->get_num_cols()/2-1,
+	                                                     text, variable, precision, unit);
+	if (position == FooterPosition::Left) {
+		m_footer_left = note;
+	}
+	else {
+		m_footer_right = note;
+	}
+}
+
+
+void LCDMenu::refresh()
+{
+	refresh_menu();
+	refresh_footer();
+}
+
+void LCDMenu::refresh_menu()
+{
+	if (m_menu_entries.empty()) {
+		return;
+	}
+
 	const auto &entry = m_menu_entries[m_menu_entry_id];
 
 	bool button_released = m_button->is_released();
@@ -216,7 +383,7 @@ void LCDMenu::refresh(bool force)
 		m_menu_entry_id = m_rotary_encoder->get_rotation() % m_menu_entries.size();
 	}
 
-	m_lcd_display->set_pos(m_title_line, 0);
+	m_lcd_display->set_pos(g_title_line, 0);
 	m_lcd_display->print(entry->get_title());
 
 	switch (entry->get_type()) {
@@ -231,7 +398,7 @@ void LCDMenu::refresh(bool force)
 			}
 
 			value = bool_entry->get_value();
-			m_lcd_display->set_pos(m_value_line, 0);
+			m_lcd_display->set_pos(g_value_line, 0);
 
 			if (value) {
 				m_lcd_display->print(format_value("yes"));
@@ -258,7 +425,7 @@ void LCDMenu::refresh(bool force)
 			}
 
 			value = int_entry->get_value();
-			m_lcd_display->set_pos(m_value_line, 0);
+			m_lcd_display->set_pos(g_value_line, 0);
 			m_lcd_display->print(format_value(std::to_string(value) + int_entry->get_unit()));
 		}
 		break;
@@ -282,7 +449,7 @@ void LCDMenu::refresh(bool force)
 			value = float_entry->get_value();
 			ss << std::setprecision(float_entry->get_num_decimal())
 			   << std::fixed << value << float_entry->get_unit();
-			m_lcd_display->set_pos(m_value_line, 0);
+			m_lcd_display->set_pos(g_value_line, 0);
 			m_lcd_display->print(format_value(ss.str()));
 		}
 		break;
@@ -292,6 +459,24 @@ void LCDMenu::refresh(bool force)
 	}
 }
 
+void LCDMenu::refresh_footer()
+{
+	m_lcd_display->set_pos(g_separator_line, 0);
+	m_lcd_display->print(m_footer_separator);
+
+	if (m_footer_left) {
+		m_lcd_display->set_pos(g_footer_line, 0);
+		m_lcd_display->print(m_footer_left->get_display());
+	}
+
+	m_lcd_display->set_pos(g_footer_line, m_lcd_display->get_num_cols()/2);
+	m_lcd_display->putchar(' ');
+
+	if (m_footer_right) {
+		m_lcd_display->set_pos(g_footer_line, m_lcd_display->get_num_cols()/2+1);
+		m_lcd_display->print(m_footer_right->get_display());
+	}
+}
 
 std::string LCDMenu::format_title(std::string title)
 {
