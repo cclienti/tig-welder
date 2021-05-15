@@ -31,7 +31,7 @@ public:
 
 	virtual std::string get_display(void)
 	{
-		std::string fmttext = m_text + ": " + get_value();
+		std::string fmttext = m_text + ":" + get_value();
 		fmttext.resize(m_width, ' ');
 		return fmttext;
 	}
@@ -51,6 +51,7 @@ private:
 	const std::uint8_t m_width;
 	const std::string m_text;
 };
+
 
 class FooterNoteBool: public FooterNoteBase
 {
@@ -76,6 +77,7 @@ private:
 	const bool &m_variable;
 };
 
+
 class FooterNoteInt: public FooterNoteBase
 {
 public:
@@ -97,6 +99,7 @@ private:
 	const int &m_variable;
 	const std::string m_unit;
 };
+
 
 class FooterNoteFloat: public FooterNoteBase
 {
