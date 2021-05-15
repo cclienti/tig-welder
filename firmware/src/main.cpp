@@ -59,12 +59,12 @@ int main(void)
 	                 std::move(lcd_button), buzzer);
 	WeldingParams welding_params;
 	bool mute = false;
-	lcd_menu.register_entry("Mute", mute);
-	lcd_menu.register_entry("Post Flow", welding_params.post_flow, 1, 10.0, 0.1, "s");
-	lcd_menu.register_entry("End Ramp", welding_params.end_ramp, 0, 10.0, 0.1, "s");
-	lcd_menu.register_entry("Current", welding_params.current, 5, 200, "A");
-	lcd_menu.register_entry("Start Ramp", welding_params.start_ramp, 0, 10.0, 0.1, "s");
-	lcd_menu.register_entry("Pre Flow", welding_params.pre_flow, 1, 10.0, 0.1, "s");
+	lcd_menu.register_menu("Mute", mute);
+	lcd_menu.register_menu("Post Flow", welding_params.post_flow, 1, 10.0, 0.1, "s");
+	lcd_menu.register_menu("End Ramp", welding_params.end_ramp, 0, 10.0, 0.1, "s");
+	lcd_menu.register_menu("Current", welding_params.current, 5, 200, "A");
+	lcd_menu.register_menu("Start Ramp", welding_params.start_ramp, 0, 10.0, 0.1, "s");
+	lcd_menu.register_menu("Pre Flow", welding_params.pre_flow, 1, 10.0, 0.1, "s");
 
 	lcd_menu.register_footer(LCDMenu::FooterPosition::Left,
 	                         "red", redcnt, "N");

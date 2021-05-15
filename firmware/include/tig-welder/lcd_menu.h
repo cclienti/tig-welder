@@ -51,12 +51,12 @@ public:
 
 	void splash(std::string text);
 
-	void register_entry(const std::string &title, bool &variable);
-	void register_entry(const std::string &title, int &variable,
-	                    int min, int max, const std::string &unit);
-	void register_entry(const std::string &title, float &variable,
-	                    float min, float max, float precision,
-	                    const std::string &unit);
+	void register_menu(const std::string &title, bool &variable);
+	void register_menu(const std::string &title, int &variable,
+	                   int min, int max, const std::string &unit);
+	void register_menu(const std::string &title, float &variable,
+	                   float min, float max, float precision,
+	                   const std::string &unit);
 
 	void register_footer(FooterPosition position,
 	                     const std::string &text, const bool &variable);
@@ -73,8 +73,6 @@ private:
 	void refresh_menu();
 	void refresh_footer();
 
-	std::string format_title(std::string title);
-	std::string format_value(std::string value);
 	std::string format_splash(std::string value);
 
 private:
