@@ -178,6 +178,9 @@ private:
 	static constexpr std::uint8_t m_value_line{1};
 	static constexpr std::uint8_t m_separator_line{2};
 	static constexpr std::uint8_t m_footer_line{3};
+
+	bool is_refreshed{false};
+	bool is_splashed{false};
 };
 
 

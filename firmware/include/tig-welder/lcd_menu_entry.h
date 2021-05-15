@@ -64,8 +64,9 @@ public:
 	}
 
 protected:
-	MenuEntryBase(Type type, std::uint8_t width, const std::string &title):
-		m_title (format_info("<" + title + ">", width, '-')),
+	MenuEntryBase(Type type, std::uint8_t width, const std::string &title,
+	              char dot, char lbracket, char rbracket):
+		m_title (format_info(lbracket + title + rbracket, width, dot)),
 		m_width (width),
 		m_type  (type)
 	{
@@ -83,8 +84,10 @@ private:
 class MenuEntryBool: public MenuEntryBase
 {
 public:
-	MenuEntryBool(const std::string title, std::uint8_t width, bool &variable):
-		MenuEntryBase(Type::Bool, width, title),
+	MenuEntryBool(std::uint8_t width, const std::string title,
+	              char dot, char lbracket, char rbracket,
+	              bool &variable):
+		MenuEntryBase(Type::Bool, width, title, dot, lbracket, rbracket),
 		m_variable(variable)
 	{
 	}
@@ -125,9 +128,11 @@ private:
 class MenuEntryInt: public MenuEntryBase
 {
 public:
-	MenuEntryInt(const std::string title, std::uint8_t width, int &variable,
+	MenuEntryInt(std::uint8_t width, const std::string title,
+	             char dot, char lbracket, char rbracket,
+	             int &variable,
 	             int min, int max, const std::string &unit):
-		MenuEntryBase (Type::Int, width, title),
+		MenuEntryBase (Type::Int, width, title, dot, lbracket, rbracket),
 		m_variable    (variable),
 		m_min         (min),
 		m_max         (max),
@@ -172,9 +177,11 @@ private:
 class MenuEntryFloat: public MenuEntryBase
 {
 public:
-	MenuEntryFloat(const std::string title, std::uint8_t width, float &variable,
+	MenuEntryFloat(std::uint8_t width, const std::string title,
+	               char dot, char lbracket, char rbracket,
+	               float &variable,
 	               float min, float max, float precision, const std::string &unit):
-		MenuEntryBase (Type::Float, width, title),
+		MenuEntryBase (Type::Float, width, title, dot, lbracket, rbracket),
 		m_variable    (variable),
 		m_min         (min),
 		m_max         (max),

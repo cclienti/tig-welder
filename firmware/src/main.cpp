@@ -88,7 +88,8 @@ int main(void)
 
 	while(1)
 	{
-		lcd_menu.refresh();
+
+
 		if (mute) {
 			buzzer->mute();
 		} else if (buzzer->is_muted()) {
@@ -110,6 +111,14 @@ int main(void)
 
 		if (redcnt % 2 == 1) hf_spark.enable();
 		else hf_spark.disable();
+
+		if (redcnt % 2 == 1) {
+			lcd_menu.splash("ERROR!");
+		}
+		else {
+			lcd_menu.refresh();
+		}
+
 	}
 	return 0;
 }
