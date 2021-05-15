@@ -80,6 +80,14 @@ public:
 	void set_pos(std::uint8_t row, std::uint8_t col);
 
 	/**
+	 * Write a custom char at the given address.
+	 *
+	 * @param address, only 8 char can be written, address is in 0 to 7.
+	 * @param char_map, pointer to a 8-byte array.
+	 */
+	void set_char(std::uint8_t address, std::uint8_t char_map[8]);
+
+	/**
 	 * Write a single char to the screen at the current position, the
 	 * position is incremented to the next column.
 	 */

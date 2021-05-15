@@ -156,6 +156,15 @@ void LCDDisplay::set_pos(std::uint8_t row, std::uint8_t col)
 	send_command(LCDCommandSetDDRAM | ddram);
 }
 
+void LCDDisplay::set_char(std::uint8_t address, std::uint8_t char_map[8])
+{
+	address &= 0x07;
+	send_command(LCDCommandSetCGRAM | address << 3);
+	for (int i=0; i<8; i++) {
+		send_byte(char_map[i], LCDControlCharacterMode);
+	}
+}
+
 int LCDDisplay::putchar(std::uint8_t value)
 {
 	send_byte(value, LCDControlCharacterMode);
