@@ -46,31 +46,117 @@ public:
 	using SwitchUPtr = std::unique_ptr<Switch>;
 	using BuzzerSPtr = std::shared_ptr<Buzzer>;
 
+	/**
+	 * LCDMenu constructor.
+	 *
+	 * The lcd_display shows the menu and the footer information. The
+	 * rotary_encoder is used to navigate into the menu and button
+	 * validates menu entry modification.
+	 *
+	 * @param lcd_display, Unique pointer to LCDDisplay instance
+	 * @param rotary_encoder, Unique pointer to RotaryEncoder instance
+	 * @param button, Unique pointer to Switch instance
+	 * @param buzzer, Shared pointer to Buzzer instance
+	 */
+
 	LCDMenu(LCDDisplayUPtr lcd_display, RotaryEncoderUPtr rotary_encoder,
 	        SwitchUPtr button, BuzzerSPtr buzzer);
 
-	void splash(const std::string &text);
-
+	/**
+	 * Add an entry in the menu to display/update a boolean variable.
+	 *
+	 * The entry is inserted at the beginning of the menu list.
+	 *
+	 * @param title, menu title
+	 * @param variable, variable reference to display/update
+	 */
 	void register_menu(const std::string &title, bool &variable);
+
+	/**
+	 * Add an entry in the menu to display/update an int variable.
+	 *
+	 * The entry is inserted at the beginning of the menu list.
+	 *
+	 * @param title, menu title
+	 * @param variable, variable reference to display/update
+	 * @param min, minimum authorized value to update the variable.
+	 * @param max, maximum authorized value to update the variable.
+	 * @param unit, physical unit string to display after the value.
+	 */
 	void register_menu(const std::string &title, int &variable,
 	                   int min, int max, const std::string &unit);
+
+	/**
+	 * Add an entry in the menu to display/update a float variable.
+	 *
+	 * The entry is inserted at the beginning of the menu list.
+	 *
+	 * @param title, menu title
+	 * @param variable, variable reference to display/update
+	 * @param min, minimum authorized value to update the variable.
+	 * @param max, maximum authorized value to update the variable.
+	 * @param precision, minimal floating point increment to consider (ex: 0.1).
+	 * @param unit, physical unit string to display after the value.
+	 */
 	void register_menu(const std::string &title, float &variable,
 	                   float min, float max, float precision,
 	                   const std::string &unit);
 
+	/**
+	 * Add a footer note to display only a boolean variable.
+	 *
+	 * @param position, left or right
+	 * @param text, footer note text info
+	 * @param variable, variable reference to display/update
+	 */
 	void register_footer(FooterPosition position,
 	                     const std::string &text, const bool &variable);
+
+	/**
+	 * Add a footer note to display only an int variable.
+	 *
+	 * @param position, left or right
+	 * @param text, footer note text info
+	 * @param variable, variable reference to display/update
+	 * @param unit, physical unit string to display after the value.
+	 */
 	void register_footer(FooterPosition position,
 	                     const std::string &text, const int &variable,
 	                     const std::string &unit);
+
+	/**
+	 * Add a footer note to display only a float variable.
+	 *
+	 * @param position, left or right
+	 * @param text, footer note text info
+	 * @param variable, variable reference to display/update
+	 * @param unit, physical unit string to display after the value.
+	 */
 	void register_footer(FooterPosition position,
 	                     const std::string &text, const float &variable,
 	                     float precision, const std::string &unit);
 
+	/**
+	 * Refresh the menu and the footer notes.
+	 */
 	void refresh();
 
+	/**
+	 * Clear the screen and display a text in the middle of the screen.
+	 *
+	 * @param text, splash screen text.
+	 */
+	void splash(const std::string &text);
+
 private:
+	/**
+	 * Refresh the menu
+	 */
 	void refresh_menu();
+
+	/**
+	 * Refresh the footer notes
+	 */
 	void refresh_footer();
 
 private:

@@ -76,6 +76,7 @@ void LCDMenu::register_menu(const std::string &title, float &variable,
 	m_menu_entries.insert(m_menu_entries.begin(), menu);
 }
 
+
 void LCDMenu::register_footer(FooterPosition position,
                               const std::string &text, const bool &variable)
 {
@@ -88,6 +89,7 @@ void LCDMenu::register_footer(FooterPosition position,
 		m_footer_right = note;
 	}
 }
+
 
 void LCDMenu::register_footer(FooterPosition position,
                               const std::string &text, const int &variable,
@@ -102,6 +104,7 @@ void LCDMenu::register_footer(FooterPosition position,
 		m_footer_right = note;
 	}
 }
+
 
 void LCDMenu::register_footer(FooterPosition position,
                               const std::string &text,
@@ -124,6 +127,7 @@ void LCDMenu::refresh()
 	refresh_menu();
 	refresh_footer();
 }
+
 
 void LCDMenu::refresh_menu()
 {
@@ -165,6 +169,7 @@ void LCDMenu::refresh_menu()
 	m_lcd_display->set_pos(m_value_line, 0);
 	m_lcd_display->print(entry->get_formatted_value());
 }
+
 
 void LCDMenu::refresh_footer()
 {
