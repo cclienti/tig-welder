@@ -46,17 +46,6 @@ public:
 
 	virtual void set_value_from_encoder(int encoder) = 0;
 
-protected:
-	MenuEntryBase(Type type, std::uint8_t width, const std::string &title):
-		m_title (format_info(std::string("<") + title + ">", width, '-')),
-		m_width (width),
-		m_type  (type)
-	{
-	}
-
-	virtual std::string get_value_str(void) = 0;
-
-private:
 	static std::string format_info(const std::string &info, std::uint8_t width, char pad)
 	{
 		int info_len = info.size();
@@ -73,6 +62,16 @@ private:
 
 		return menu_info;
 	}
+
+protected:
+	MenuEntryBase(Type type, std::uint8_t width, const std::string &title):
+		m_title (format_info("<" + title + ">", width, '-')),
+		m_width (width),
+		m_type  (type)
+	{
+	}
+
+	virtual std::string get_value_str(void) = 0;
 
 private:
 	Type m_type;
