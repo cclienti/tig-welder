@@ -49,7 +49,7 @@ public:
 	LCDMenu(LCDDisplayUPtr lcd_display, RotaryEncoderUPtr rotary_encoder,
 	        SwitchUPtr button, BuzzerSPtr buzzer);
 
-	void splash(std::string text);
+	void splash(const std::string &text);
 
 	void register_menu(const std::string &title, bool &variable);
 	void register_menu(const std::string &title, int &variable,
@@ -73,8 +73,6 @@ private:
 	void refresh_menu();
 	void refresh_footer();
 
-	std::string format_splash(std::string value);
-
 private:
 	LCDDisplayUPtr m_lcd_display;
 	RotaryEncoderUPtr m_rotary_encoder;
@@ -89,6 +87,11 @@ private:
 	bool m_change_value;
 
 	const std::string m_footer_separator;
+
+	static constexpr std::uint8_t m_title_line{0};
+	static constexpr std::uint8_t m_value_line{1};
+	static constexpr std::uint8_t m_separator_line{2};
+	static constexpr std::uint8_t m_footer_line{3};
 };
 
 

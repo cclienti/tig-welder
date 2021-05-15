@@ -23,14 +23,6 @@
 #include "tig-welder/buzzer.h"
 
 
-namespace {
-constexpr std::uint8_t g_title_line{0};
-constexpr std::uint8_t g_value_line{1};
-constexpr std::uint8_t g_separator_line{2};
-constexpr std::uint8_t g_footer_line{3};
-}
-
-
 LCDMenu::LCDMenu(LCDDisplayUPtr lcd_display, RotaryEncoderUPtr rotary_encoder,
                  SwitchUPtr button, BuzzerSPtr buzzer):
 	m_lcd_display      (std::move(lcd_display)),
@@ -49,12 +41,13 @@ LCDMenu::LCDMenu(LCDDisplayUPtr lcd_display, RotaryEncoderUPtr rotary_encoder,
 }
 
 
-void LCDMenu::splash(std::string text)
+void LCDMenu::splash(const std::string &text)
 {
 	m_lcd_display->clear();
 	m_lcd_display->home();
 	m_lcd_display->set_pos(m_lcd_display->get_num_cols()/2, 0);
-	m_lcd_display->print(format_splash(text));
+	m_lcd_display->print(MenuEntryBase::format_info("[" + text + "]",
+	                                                m_lcd_display->get_num_cols(), '='));
 }
 
 
@@ -155,7 +148,7 @@ void LCDMenu::refresh_menu()
 		m_menu_entry_id = m_rotary_encoder->get_rotation() % m_menu_entries.size();
 	}
 
-	m_lcd_display->set_pos(g_title_line, 0);
+	m_lcd_display->set_pos(m_title_line, 0);
 	m_lcd_display->print(entry->get_formatted_title());
 
 	if (m_change_value) {
@@ -169,45 +162,25 @@ void LCDMenu::refresh_menu()
 		}
 	}
 
-	m_lcd_display->set_pos(g_value_line, 0);
+	m_lcd_display->set_pos(m_value_line, 0);
 	m_lcd_display->print(entry->get_formatted_value());
 }
 
 void LCDMenu::refresh_footer()
 {
-	m_lcd_display->set_pos(g_separator_line, 0);
+	m_lcd_display->set_pos(m_separator_line, 0);
 	m_lcd_display->print(m_footer_separator);
 
 	if (m_footer_left) {
-		m_lcd_display->set_pos(g_footer_line, 0);
+		m_lcd_display->set_pos(m_footer_line, 0);
 		m_lcd_display->print(m_footer_left->get_display());
 	}
 
-	m_lcd_display->set_pos(g_footer_line, m_lcd_display->get_num_cols()/2);
+	m_lcd_display->set_pos(m_footer_line, m_lcd_display->get_num_cols()/2);
 	m_lcd_display->putchar(' ');
 
 	if (m_footer_right) {
-		m_lcd_display->set_pos(g_footer_line, m_lcd_display->get_num_cols()/2+1);
+		m_lcd_display->set_pos(m_footer_line, m_lcd_display->get_num_cols()/2+1);
 		m_lcd_display->print(m_footer_right->get_display());
 	}
-}
-
-std::string LCDMenu::format_splash(std::string title)
-{
-	int num_cols = m_lcd_display->get_num_cols();
-	int title_len = title.size();
-
-	std::string title_ = title;
-	if (title_len > num_cols - 4) {
-		title_.resize(num_cols-4);
-	}
-	title_.insert(0, "=[");
-	title_ += "]=";
-
-	int padding = (num_cols - title_.size()) / 2;
-
-	std::string menu_title(num_cols, '=');
-	menu_title.replace(padding, title_.size(), title_);
-
-	return menu_title;
 }
