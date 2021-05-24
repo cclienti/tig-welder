@@ -21,4 +21,3 @@ OPENODCD_INSTALL_DIR=${HOME}/rpi-openocd
 ${OPENODCD_INSTALL_DIR}/bin/openocd \
     -f ${OPENODCD_INSTALL_DIR}/share/openocd/scripts/interface/picoprobe.cfg \
     -f ${OPENODCD_INSTALL_DIR}/share/openocd/scripts/target/rp2040.cfg
-$

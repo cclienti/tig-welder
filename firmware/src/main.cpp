@@ -21,7 +21,9 @@
 #include "tig-welder/rotary_encoder.h"
 #include "tig-welder/spi_adc.h"
 #include "tig-welder/buzzer.h"
+#include "tig-welder/ctn.h"
 
+#include "hardware/gpio.h"
 
 #include <cstdio>
 #include <cstring>
@@ -86,39 +88,93 @@ int main(void)
 	// 	 }
 	// );
 
+	// while(1)
+	// {
+
+	// 	if (mute) {
+	// 		buzzer->mute();
+	// 	} else if (buzzer->is_muted()) {
+	// 		buzzer->unmute();
+	// 	}
+
+	// 	if (black_switch.is_released()) {
+	// 		buzzer->error();
+	// 		blackcnt +=1;
+	// 	}
+
+	// 	if (red_switch.is_released()) {
+	// 		buzzer->valid();
+	// 		redcnt += 1;
+	// 	}
+
+	// 	if (blackcnt % 2 == 1) solenoid.enable();
+	// 	else solenoid.disable();
+
+	// 	if (redcnt % 2 == 1) hf_spark.enable();
+	// 	else hf_spark.disable();
+
+	// 	if (redcnt % 2 == 1) {
+	// 		lcd_menu.splash("ERROR!");
+	// 	}
+	// 	else {
+	// 		lcd_menu.refresh();
+	// 	}
+
+	// }
+
+	const std::uint32_t hbridge[] = {22, 21, 20, 19, 18};
+	const std::uint32_t hb_shutdown = 0;
+	const std::uint32_t hb_h0 = 1;
+	const std::uint32_t hb_l1 = 2;
+	const std::uint32_t hb_h1 = 3;
+	const std::uint32_t hb_l0 = 4;
+
+	for (int i=0; i<5; i++) {
+		gpio_init(hbridge[i]);
+		gpio_set_dir(hbridge[i], GPIO_OUT);
+		gpio_put(hbridge[i], 0);
+	}
+
+	gpio_put(hbridge[hb_shutdown], 0);
+	gpio_put(hbridge[hb_h0], 0);
+	gpio_put(hbridge[hb_l1], 0);
+	gpio_put(hbridge[hb_h1], 0);
+	gpio_put(hbridge[hb_l0], 0);
+
+	bool start = false;
+	bool warn1 = false;
+	bool warn2 = false;
 	while(1)
 	{
+		int temp = get_temp_int(adc.read_single(1));
 
-
-		if (mute) {
-			buzzer->mute();
-		} else if (buzzer->is_muted()) {
-			buzzer->unmute();
-		}
-
-		if (black_switch.is_released()) {
-			buzzer->error();
-			blackcnt +=1;
-		}
-
-		if (red_switch.is_released()) {
-			buzzer->valid();
-			redcnt += 1;
-		}
-
-		if (blackcnt % 2 == 1) solenoid.enable();
-		else solenoid.disable();
-
-		if (redcnt % 2 == 1) hf_spark.enable();
-		else hf_spark.disable();
-
-		if (redcnt % 2 == 1) {
-			lcd_menu.splash("ERROR!");
+		printf("ADC0 = %8d - ADC1 = %8d\r", adc.read_single(0), temp);
+		if (adc.read_single(0) > 2048) {
+			if (!start) {
+				buzzer->valid();
+				start = true;
+			}
+			if (temp >= 100 && !warn1) {
+				warn1 = true;
+				buzzer->warning();
+			}
+			if (temp >= 125 && !warn2) {
+				warn2 = true;
+				buzzer->warning();
+			}
+			gpio_put(hbridge[hb_h0], 1);
+			gpio_put(hbridge[hb_l1], 1);
+			//solenoid.enable();
 		}
 		else {
-			lcd_menu.refresh();
+			start = false;
+			warn1 = false;
+			warn2 = false;
+			gpio_put(hbridge[hb_h0], 0);
+			gpio_put(hbridge[hb_l1], 0);
+			//solenoid.disable();
 		}
-
 	}
+
 	return 0;
 }
