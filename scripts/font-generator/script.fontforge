@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ "$#" -ne 2 ]; then
+    echo -e "usage: $(basename $0) <font> <bitmap width>"
+    echo -e ""
+    echo -e "If a bitmap font is used, pass the corresponding bitmap width."
+    echo -e ""
+    echo -e "Example:"
+    echo -e "\t script.fontforge /usr/share/fonts/terminus-fonts/ter-u12n.otb 12  # Fixed font"
+    echo -e "\t script.fontforge /usr/share/fonts/dejavu-sans-mono-fonts/DejaVuSansMono.ttf 21  # TTF font"
+    exit 1
+fi
+
+fontforge -lang=ff -c "Open(\"$1\");SelectWorthOutputting();BitmapsAvail([$2]);Export(\"%f|%e|%n.bmp\",$2);"

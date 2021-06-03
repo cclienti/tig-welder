@@ -31,3 +31,9 @@ gerber*/
 log*/
 *-rescue.dcm
 *-rescue.lib
+
+### font-generator
+scripts/font-generator/generated/
+*.bmp
+*.png
+*.svg
