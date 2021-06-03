@@ -12,6 +12,9 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+#include <stdbool.h>
+    
 #ifndef LED_MATRIX_NUM_MODULES
 #define LED_MATRIX_NUM_MODULES 4
 #endif    
@@ -31,30 +34,38 @@ extern "C" {
     
 
 /**
- * Initialize the LED Matrix
+ * Initialize the LED Matrix.
  */
-void led_matrix_init(void);
+void led_matrix_init(bool hflip, bool vflip, uint8_t luminosity);
 
 /**
+ * Change the luminosity.
  * 
  * @param value
  */
-void led_matrix_luminosity(unsigned char value);
+void led_matrix_luminosity(uint8_t value);
 
 /**
- * 
+ * Clear the device.
  */
 void led_matrix_clear(void);
 
 /**
+ * Flip horizontally the display.
  * 
- * @param data
- * @param len
+ * It will be applied to the next buffer fill/send
  */
-void led_matrix_send(unsigned char data[], unsigned char len);
+void led_matrix_hflip(bool value);
 
 /**
+ * Flip vertically the display.
  * 
+ * It will be applied to the next buffer fill/send
+ */
+void led_matrix_vflip(bool value);
+
+/**
+ * A Simple led display demo.
  */
 void led_matrix_demo(void);
 

@@ -70,7 +70,11 @@
 
 
 #include "led_matrix.h"
+
 #include <xc.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 
 /**
  * Helpers to set/get ports
@@ -135,14 +139,14 @@ void init(void)
  * Start the timer to wait for n tenth of seconds
  * @param n, tenth of seconds, max 80
  */
-void start_tenth_chrono(unsigned short n)
+void start_tenth_chrono(uint16_t n)
 {
     // FOSC/4 = 2'000'000
     // Prescaler = 256
     // Timer tick = 256/2'000'000 = 0.000128s
     // 1/10s corresponds to 0.1/0.000128 = 781.25
     T0CON = 0;
-    unsigned short value = 65535 - (n>>2) - n*781;
+    uint16_t value = 65535 - (n>>2) - n*781;
     TMR0H = value >> 8;
     TMR0L = value & 0xff;
     T0CON = 0x87;
@@ -152,7 +156,7 @@ void start_tenth_chrono(unsigned short n)
  * Check if the chrono is ended (timer overflow)
  * @return 1 if ended, else 0
  */
-unsigned char is_chrono_ended(void)
+uint8_t is_chrono_ended(void)
 {
     if (!TMR0IF) {
         return 0;
@@ -191,16 +195,14 @@ void main(void)
     wait_stable_clock();
     init();
     
-    led_matrix_init();
-    led_matrix_luminosity(64);
-    led_matrix_clear();
+    led_matrix_init(true, false, 64);
     led_matrix_demo();
 
     enum States state = IDLE;
     while (1) {
-        unsigned char pedal_pressed = PEDAL_PRESSED;
-        unsigned char pedal_released = !pedal_pressed;
-        unsigned char chrono_ended = is_chrono_ended();
+        uint8_t pedal_pressed = PEDAL_PRESSED;
+        uint8_t pedal_released = !pedal_pressed;
+        uint8_t chrono_ended = is_chrono_ended();
         
         switch(state) {
         case IDLE:

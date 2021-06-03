@@ -12,10 +12,14 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+    
 /**
- * ASCII table shifted by 32. From "SPACE" (32d) to "Z" (90d).
+ * ASCII table shifted by 32. From "SPACE" (32d) to "~" (126d).
+ * 
+ * Eight user chars are available between 24d and 31d.
  */    
-extern unsigned char misc_fixed_5x7[][5];
+extern uint8_t misc_fixed_5x7[][5];
 
 
 

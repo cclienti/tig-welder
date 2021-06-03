@@ -1,7 +1,7 @@
 #include "unpack.h"
 #include <xc.h>
 
-static unsigned char unpack1(unsigned char x)
+static uint8_t unpack1(uint8_t x)
 {
     switch(x)
     {
@@ -74,7 +74,7 @@ static unsigned char unpack1(unsigned char x)
     return 0;
 }
 
-static unsigned char unpack2(unsigned char x)
+static uint8_t unpack2(uint8_t x)
 {
     switch(x)
     {
@@ -147,41 +147,41 @@ static unsigned char unpack2(unsigned char x)
     return 0;
 }
 
-unsigned char unpack4_high(unsigned char x, unsigned char y)
+uint8_t unpack4_high(uint8_t x, uint8_t y)
 {
-    unsigned char a = x & 0xf0;
-    unsigned char b = y & 0xf0;
-    b = (unsigned char) ((b >> 4)) | ((unsigned char) (b << 4));
+    uint8_t a = x & 0xf0;
+    uint8_t b = y & 0xf0;
+    b = (uint8_t) ((b >> 4)) | ((uint8_t) (b << 4));
     return a | b;
 }
 
-unsigned char unpack4_low(unsigned char x, unsigned char y)
+uint8_t unpack4_low(uint8_t x, uint8_t y)
 {
-    unsigned char a = x & 0x0f;
-    unsigned char b = y & 0x0f;
-    a = (unsigned char) ((a >> 4)) | (unsigned char) ((a << 4));
+    uint8_t a = x & 0x0f;
+    uint8_t b = y & 0x0f;
+    a = (uint8_t) ((a >> 4)) | (uint8_t) ((a << 4));
     return a | b;
 }
 
-unsigned char unpack1_high(unsigned char x, unsigned char y)
+uint8_t unpack1_high(uint8_t x, uint8_t y)
 {
     x = unpack4_high(x, y);
     return unpack1(x);
 }
 
-unsigned char unpack1_low(unsigned char x, unsigned char y)
+uint8_t unpack1_low(uint8_t x, uint8_t y)
 {
     x = unpack4_low(x, y);
     return unpack1(x); 
 }
 
-unsigned char unpack2_high(unsigned char x, unsigned char y)
+uint8_t unpack2_high(uint8_t x, uint8_t y)
 {
     x = unpack4_high(x, y);
     return unpack2(x);     
 }
 
-unsigned char unpack2_low(unsigned char x, unsigned char y)
+uint8_t unpack2_low(uint8_t x, uint8_t y)
 {
     x = unpack4_low(x, y);
     return unpack2(x);     

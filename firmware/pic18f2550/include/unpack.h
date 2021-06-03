@@ -12,53 +12,60 @@
 extern "C" {
 #endif
 
-/**
- * 
- * @param x
- * @param y
- * @return 
- */
-unsigned char unpack1_high(unsigned char x, unsigned char y);
+#include <stdint.h>
 
 /**
+ * Interleave bits of the x and y nibbles (MSBs)
  * 
  * @param x
  * @param y
  * @return 
  */
-unsigned char unpack1_low(unsigned char x, unsigned char y);
+uint8_t unpack1_high(uint8_t x, uint8_t y);
 
 /**
+ * Interleave bits of the x and y nibbles (LSBs)
  * 
  * @param x
  * @param y
  * @return 
  */
-unsigned char unpack2_high(unsigned char x, unsigned char y);
+uint8_t unpack1_low(uint8_t x, uint8_t y);
 
 /**
+ * Interleave pair of bits of the x and y nibbles (MSBs)
  * 
  * @param x
  * @param y
  * @return 
  */
-unsigned char unpack2_low(unsigned char x, unsigned char y);
+uint8_t unpack2_high(uint8_t x, uint8_t y);
 
 /**
+ * Interleave pair of bits of the x and y nibbles (LSBs)
  * 
  * @param x
  * @param y
  * @return 
  */
-unsigned char unpack4_high(unsigned char x, unsigned char y);
+uint8_t unpack2_low(uint8_t x, uint8_t y);
 
 /**
+ * Interleave x and y high nibbles (MSBs)
+ * @param x
+ * @param y
+ * @return 
+ */
+uint8_t unpack4_high(uint8_t x, uint8_t y);
+
+/**
+ * Interleave x and y high nibbles (LSBs)
  * 
  * @param x
  * @param y
  * @return 
  */
-unsigned char unpack4_low(unsigned char x, unsigned char y);
+uint8_t unpack4_low(uint8_t x, uint8_t y);
 
 
 #ifdef	__cplusplus
