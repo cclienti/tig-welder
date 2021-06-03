@@ -22,8 +22,10 @@
 #include "tig-welder/spi_adc.h"
 #include "tig-welder/buzzer.h"
 #include "tig-welder/ctn.h"
+#include "tig-welder/hbridge.h"
 
 #include "hardware/gpio.h"
+#include "pico/time.h"
 
 #include <cstdio>
 #include <cstring>
@@ -31,148 +33,163 @@
 
 struct WeldingParams
 {
-	float pre_flow{0.0};
-	float post_flow{5.0};
+	float pre_flow{0.5};
+	float post_flow{8.0};
 	float start_ramp{0.0};
 	float end_ramp{0.0};
 	int current{40};
 };
 
 
+enum class WeldingStates
+{
+	Idle,
+	PreFlow,
+	Welding,
+	PostFlow,
+	Protection
+};
+
+
+enum TempInfo
+{
+	Warning1      = 105,
+	Warning2      = 115,
+	Protection    = 125,
+	EndProtection = 70
+};
+
+
 int main(void)
 {
 	stdio_init_all();
+	printf("Hello World!");
 
 	Relay solenoid(9, true);
 	Relay hf_spark(8, true);
 	Switch red_switch(10, true);
 	Switch black_switch(11, true);
 	SPIADC adc;
+	HBridge hbridge(10e-9, 22, 21, 20, 19, 18);
+	hbridge.set_wrap(20000); //10ns Counter, wrap at 20000 => 5000hz period
+	std::uint16_t hb_duty = 10000;
 
 	auto lcd_display = std::make_unique<LCDDisplay>();
 	auto lcd_encoder = std::make_unique<RotaryEncoder>(12, 13, 0);
 	auto lcd_button = std::make_unique<Switch>(14, true);
 	auto buzzer = std::make_shared<Buzzer>();
 
-	int redcnt{0};
-	int blackcnt{0};
-
 	LCDMenu lcd_menu(std::move(lcd_display), std::move(lcd_encoder),
 	                 std::move(lcd_button), buzzer);
+
+	bool start = false;
+	bool warn1 = false;
+	bool warn2 = false;
+	bool protection = true;
+	int temp = 0;
+	int pedal = 0;
+	bool mute = true;
+	WeldingStates welding_state {WeldingStates::Idle};
 	WeldingParams welding_params;
-	bool mute = false;
+
 	lcd_menu.register_menu("Mute", mute);
 	lcd_menu.register_menu("Post Flow", welding_params.post_flow, 1, 10.0, 0.1, "s");
 	lcd_menu.register_menu("End Ramp", welding_params.end_ramp, 0, 10.0, 0.1, "s");
 	lcd_menu.register_menu("Current", welding_params.current, 5, 200, "A");
 	lcd_menu.register_menu("Start Ramp", welding_params.start_ramp, 0, 10.0, 0.1, "s");
 	lcd_menu.register_menu("Pre Flow", welding_params.pre_flow, 1, 10.0, 0.1, "s");
-
 	lcd_menu.register_footer(LCDMenu::FooterPosition::Left,
-	                         "red", redcnt, "N");
+	                         "Temp", temp, "C");
 	lcd_menu.register_footer(LCDMenu::FooterPosition::Right,
-	                         "black", blackcnt, "N");
-	// buzzer.melody(
-	// 	 {
-	// 		 {Buzzer::Note::Sol, 500},  {Buzzer::Note::Silence, 100},
-	// 		 {Buzzer::Note::Sol, 500},  {Buzzer::Note::Silence, 100},
-	// 		 {Buzzer::Note::Sol, 500},  {Buzzer::Note::Silence, 100},
-	// 		 {Buzzer::Note::La,  500},  {Buzzer::Note::Silence, 100},
-	// 		 {Buzzer::Note::Si,  500},  {Buzzer::Note::Silence, 100},
-	// 		 {Buzzer::Note::La,  500},  {Buzzer::Note::Silence, 100},
-	// 		 {Buzzer::Note::Sol, 500},  {Buzzer::Note::Silence, 100},
-	// 		 {Buzzer::Note::Si,  500},  {Buzzer::Note::Silence, 100},
-	// 		 {Buzzer::Note::La,  500},  {Buzzer::Note::Silence, 100},
-	// 		 {Buzzer::Note::La,  500},  {Buzzer::Note::Silence, 100},
-	// 		 {Buzzer::Note::Sol, 500},  {Buzzer::Note::Silence, 100}
-	// 	 }
-	// );
+	                         "P", pedal, "V");
 
-	// while(1)
-	// {
 
-	// 	if (mute) {
-	// 		buzzer->mute();
-	// 	} else if (buzzer->is_muted()) {
-	// 		buzzer->unmute();
-	// 	}
-
-	// 	if (black_switch.is_released()) {
-	// 		buzzer->error();
-	// 		blackcnt +=1;
-	// 	}
-
-	// 	if (red_switch.is_released()) {
-	// 		buzzer->valid();
-	// 		redcnt += 1;
-	// 	}
-
-	// 	if (blackcnt % 2 == 1) solenoid.enable();
-	// 	else solenoid.disable();
-
-	// 	if (redcnt % 2 == 1) hf_spark.enable();
-	// 	else hf_spark.disable();
-
-	// 	if (redcnt % 2 == 1) {
-	// 		lcd_menu.splash("ERROR!");
-	// 	}
-	// 	else {
-	// 		lcd_menu.refresh();
-	// 	}
-
-	// }
-
-	const std::uint32_t hbridge[] = {22, 21, 20, 19, 18};
-	const std::uint32_t hb_shutdown = 0;
-	const std::uint32_t hb_h0 = 1;
-	const std::uint32_t hb_l1 = 2;
-	const std::uint32_t hb_h1 = 3;
-	const std::uint32_t hb_l0 = 4;
-
-	for (int i=0; i<5; i++) {
-		gpio_init(hbridge[i]);
-		gpio_set_dir(hbridge[i], GPIO_OUT);
-		gpio_put(hbridge[i], 0);
-	}
-
-	gpio_put(hbridge[hb_shutdown], 0);
-	gpio_put(hbridge[hb_h0], 0);
-	gpio_put(hbridge[hb_l1], 0);
-	gpio_put(hbridge[hb_h1], 0);
-	gpio_put(hbridge[hb_l0], 0);
-
-	bool start = false;
-	bool warn1 = false;
-	bool warn2 = false;
 	while(1)
 	{
-		int temp = get_temp_int(adc.read_single(1));
+		temp = get_temp_int(adc.read8_single(1));
+		pedal = adc.read8_single(0);
 
-		printf("ADC0 = %8d - ADC1 = %8d\r", adc.read_single(0), temp);
-		if (adc.read_single(0) > 2048) {
-			if (!start) {
-				buzzer->valid();
-				start = true;
+		switch(welding_state) {
+		case WeldingStates::Idle:
+			{
+				warn1 = false;
+				warn2 = false;
+				hbridge.freewheel();
+
+				lcd_menu.refresh();
+				if (mute && !buzzer->is_muted()) {
+					buzzer->mute();
+				}else if (!mute && buzzer->is_muted()) {
+					buzzer->unmute();
+				}
+
+				if (pedal >= 2048) {
+					welding_state = WeldingStates::PreFlow;
+					buzzer->valid();
+				}
 			}
-			if (temp >= 100 && !warn1) {
-				warn1 = true;
-				buzzer->warning();
+			break;
+
+		case WeldingStates::PreFlow:
+			{
+				hbridge.freewheel();
+				lcd_menu.splash("Pre-flow");
+				solenoid.enable();
+				sleep_ms(welding_params.pre_flow * 1000);
+				welding_state = WeldingStates::Welding;
 			}
-			if (temp >= 125 && !warn2) {
-				warn2 = true;
-				buzzer->warning();
+			break;
+
+		case WeldingStates::Welding:
+			{
+				lcd_menu.splash("Welding");
+				hbridge.forward(hb_duty);
+
+				if (!warn1 && temp >= TempInfo::Warning1) {
+					warn1 = true;
+					buzzer->warning();
+				}
+				else if (!warn2 && temp >= TempInfo::Warning2) {
+					warn2 = true;
+					buzzer->warning();
+				}
+				else if (temp >= TempInfo::Protection) {
+					welding_state = WeldingStates::PostFlow;
+					buzzer->error();
+				}
+				else if (pedal < 2048) {
+					welding_state = WeldingStates::PostFlow;
+				}
 			}
-			gpio_put(hbridge[hb_h0], 1);
-			gpio_put(hbridge[hb_l1], 1);
-			//solenoid.enable();
-		}
-		else {
-			start = false;
-			warn1 = false;
-			warn2 = false;
-			gpio_put(hbridge[hb_h0], 0);
-			gpio_put(hbridge[hb_l1], 0);
-			//solenoid.disable();
+			break;
+
+		case WeldingStates::PostFlow:
+			{
+				hbridge.freewheel();
+				lcd_menu.splash("Post-flow");
+
+				if (temp >= TempInfo::Protection) {
+					welding_state = WeldingStates::Protection;
+				}
+				else {
+					welding_state = WeldingStates::Idle;
+				}
+
+				sleep_ms(welding_params.post_flow * 1000);
+				solenoid.disable();
+			}
+			break;
+
+		case WeldingStates::Protection:
+			{
+				hbridge.freewheel();
+				solenoid.disable();
+				lcd_menu.splash("Protection");
+				if (temp <= TempInfo::EndProtection) {
+					welding_state = WeldingStates::Idle;
+				}
+			}
+			break;
 		}
 	}
 

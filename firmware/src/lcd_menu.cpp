@@ -153,9 +153,10 @@ void LCDMenu::splash(const std::string &text)
 
 	is_splashed = true;
 
-	m_lcd_display->set_pos(m_lcd_display->get_num_lines()/2, 0);
+	m_lcd_display->set_pos(0, 0);
 	m_lcd_display->print(MenuEntryBase::format_info("\x01" + text + "\x02",
 	                                                m_lcd_display->get_num_cols(), '\x03'));
+	refresh_footer();
 }
 
 

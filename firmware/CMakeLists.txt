@@ -32,7 +32,8 @@ add_executable(tig_welder
   src/lcd_menu.cpp
   src/rotary_encoder.cpp
   src/spi_adc.cpp
-  src/buzzer.cpp)
+  src/buzzer.cpp
+  src/hbridge.cpp)
 
 # Generates header for pio
 pico_generate_pio_header(tig_welder ${CMAKE_CURRENT_LIST_DIR}/pio/rotary_encoder.pio)
