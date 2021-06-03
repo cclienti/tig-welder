@@ -66,8 +66,6 @@ void Buzzer::warning()
 	melody({{Note::Do, 300}, {Note::Silence, 300},
 	        {Note::Do, 300}, {Note::Silence, 300},
 	        {Note::Do, 300}, {Note::Silence, 300},
-	        {Note::Do, 300}, {Note::Silence, 300},
-	        {Note::Do, 300}, {Note::Silence, 300},
 	        {Note::Do, 300}, {Note::Silence, 300}});
 }
 
@@ -80,7 +78,6 @@ const Buzzer::Melody &Buzzer::pop_note(void)
 
 void Buzzer::buzz(Note note)
 {
-	std::uint8_t duty_cycle = 128;
 	std::int32_t top;
 
 	auto freq = static_cast<std::uint32_t>(note);
