@@ -40,6 +40,16 @@ SPIADC::SPIADC(std::uint8_t spi_inst_num, std::uint32_t spi_speed,
 	gpio_set_function(m_tx_pin, GPIO_FUNC_SPI);
 }
 
+std::uint16_t SPIADC::read8_single(std::uint8_t channel) const
+{
+	return readn<8>(channel, true);
+}
+
+std::uint16_t SPIADC::read8_diff(std::uint8_t channel_diff) const
+{
+	return readn<8>(channel_diff, false);
+}
+
 std::uint16_t SPIADC::read_single(std::uint8_t channel) const
 {
 	return read(channel, true);
@@ -49,6 +59,17 @@ std::uint16_t SPIADC::read_diff(std::uint8_t channel_diff) const
 {
 	return read(channel_diff, false);
 }
+
+template<std::uint8_t N>
+std::uint16_t SPIADC::readn(std::uint8_t channel, bool single) const
+{
+	std::uint32_t sum = 0;
+	for (int i=0; i<N; i++) {
+		sum += read(channel, single);
+	}
+	return sum / N;
+}
+
 
 std::uint16_t SPIADC::read(std::uint8_t channel, bool single) const
 {

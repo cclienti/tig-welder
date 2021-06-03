@@ -28,10 +28,16 @@ public:
 	       std::uint32_t cs_pin=5u, std::uint32_t clk_pin=2u,
 	       std::uint32_t tx_pin=3u, std::uint32_t rx_pin=4u);
 
+	std::uint16_t read8_single(std::uint8_t channel) const;
+	std::uint16_t read8_diff(std::uint8_t channel_diff) const;
+
 	std::uint16_t read_single(std::uint8_t channel) const;
 	std::uint16_t read_diff(std::uint8_t channel_diff) const;
 
 private:
+	template<std::uint8_t N>
+	std::uint16_t readn(std::uint8_t channel, bool single) const;
+
 	std::uint16_t read(std::uint8_t channel, bool single) const;
 
 	void cs_select(void) const;
