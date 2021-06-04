@@ -95,12 +95,22 @@
 # define PRE_FLOW_TIME   5  // 0.5s
 # define POST_FLOW_TIME 60  // 6.0s
 
+/**
+ * Configure the clock to 8Mhz
+ */
+void wait_stable_clock(void)
+{
+    OSCCONbits.IRCF = 7;  // 8Mhz Internal Oscillator
+    while (!OSCCONbits.IOFS); // Wait for a stable clock
+}
 
 /**
  * Initialize in/out ports
  */
 void init(void)
 {
+    wait_stable_clock();
+
     // Disable Analog inputs
     ADCON1bits.PCFG = 0xf;
 
@@ -113,23 +123,23 @@ void init(void)
     SSPCON1bits.SSPM = 0;  // SPI MASTER Fosc/4 => 2Mhz SPI speed
     SSPCON1bits.CKP = 1;   // SPI Idle state for clock is a low level
     SSPCON1bits.SSPEN = 1; // SPI Enable
-    
+
     // Inputs
     TRISBbits.TRISB4 = 1;  // Pedal switch
-    
+
     // Outputs
     LED_RED = 0;
     TRISBbits.TRISB2 = 0;  // Red LED
-    
+
     LED_YELLOW = 0;
     TRISBbits.TRISB3 = 0;  // Yellow LED
-    
+
     ARC_RELAY = 0;
     TRISCbits.TRISC0 = 0;  // ARC relay
-    
+
     PUMP_SOLENOID = 0;
     TRISCbits.TRISC1 = 0;  // Pump solenoid
-    
+
     HF_RELAY = 0;
     TRISCbits.TRISC2 = 0;  // HF relay
 }
@@ -161,19 +171,10 @@ uint8_t is_chrono_ended(void)
     if (!TMR0IF) {
         return 0;
     }
-   
+
     T0CON = 0;
     TMR0IF = 0;
     return 1;
-}
-
-/**
- * Configure the clock to 8Mhz
- */
-void wait_stable_clock(void)
-{
-    OSCCONbits.IRCF = 7;  // 8Mhz Internal Oscillator
-    while (!OSCCONbits.IOFS); // Wait for a stable clock
 }
 
 /**
@@ -191,95 +192,101 @@ enum States {
  * Main entry point
  */
 void main(void)
-{   
-    wait_stable_clock();
+{
     init();
-    
+
     led_matrix_init(true, false, 64);
-    led_matrix_demo();
+
+    led_matrix_buffer_clear();
+    led_matrix_print("PR=");
+    led_matrix_setpos(3);
+    led_matrix_print_u16_dec1(32, '0', 1);
+    led_matrix_buffer_send();
+
+    //led_matrix_demo();
 
     enum States state = IDLE;
     while (1) {
         uint8_t pedal_pressed = PEDAL_PRESSED;
         uint8_t pedal_released = !pedal_pressed;
         uint8_t chrono_ended = is_chrono_ended();
-        
+
         switch(state) {
         case IDLE:
-            LED_RED = 0;    
-            LED_YELLOW = 0;    
-            ARC_RELAY = 0;    
-            PUMP_SOLENOID = 0;    
+            LED_RED = 0;
+            LED_YELLOW = 0;
+            ARC_RELAY = 0;
+            PUMP_SOLENOID = 0;
             HF_RELAY = 0;
             if (pedal_pressed) {
                 state = PRE_FLOW_START;
             }
             break;
-            
+
         case PRE_FLOW_START:
-            LED_RED = 0;    
-            LED_YELLOW = 1;    
-            ARC_RELAY = 0;    
-            PUMP_SOLENOID = 1;    
+            LED_RED = 0;
+            LED_YELLOW = 1;
+            ARC_RELAY = 0;
+            PUMP_SOLENOID = 1;
             HF_RELAY = 0;
             state = PRE_FLOW_WAIT;
             start_tenth_chrono(PRE_FLOW_TIME);
             break;
-            
+
         case PRE_FLOW_WAIT:
-            LED_RED = 0;    
-            LED_YELLOW = 1;    
-            ARC_RELAY = 0;    
-            PUMP_SOLENOID = 1;    
+            LED_RED = 0;
+            LED_YELLOW = 1;
+            ARC_RELAY = 0;
+            PUMP_SOLENOID = 1;
             HF_RELAY = 0;
             if (chrono_ended) {
                 state = HF_START;
             }
             break;
-            
+
         case HF_START:
-            LED_RED = 1;    
-            LED_YELLOW = 1;    
-            ARC_RELAY = 1;    
-            PUMP_SOLENOID = 1;    
+            LED_RED = 1;
+            LED_YELLOW = 1;
+            ARC_RELAY = 1;
+            PUMP_SOLENOID = 1;
             HF_RELAY = 1;
             if (pedal_released) {
                 state = WELDING;
             }
             break;
-            
+
         case WELDING:
-            LED_RED = 1;    
-            LED_YELLOW = 1;    
-            ARC_RELAY = 1;    
-            PUMP_SOLENOID = 1;    
+            LED_RED = 1;
+            LED_YELLOW = 1;
+            ARC_RELAY = 1;
+            PUMP_SOLENOID = 1;
             HF_RELAY = 0;
             if (pedal_pressed) {
                 state = POST_FLOW_START;
             }
             break;
-            
+
         case POST_FLOW_START:
-            LED_RED = 0;    
-            LED_YELLOW = 1;    
-            ARC_RELAY = 0;    
-            PUMP_SOLENOID = 1;    
+            LED_RED = 0;
+            LED_YELLOW = 1;
+            ARC_RELAY = 0;
+            PUMP_SOLENOID = 1;
             HF_RELAY = 0;
-            state = POST_FLOW_WAIT;            
+            state = POST_FLOW_WAIT;
             start_tenth_chrono(POST_FLOW_TIME);
             break;
-            
+
         case POST_FLOW_WAIT:
-            LED_RED = 0;    
-            LED_YELLOW = 1;    
-            ARC_RELAY = 0;    
-            PUMP_SOLENOID = 1;    
+            LED_RED = 0;
+            LED_YELLOW = 1;
+            ARC_RELAY = 0;
+            PUMP_SOLENOID = 1;
             HF_RELAY = 0;
             if (chrono_ended) {
                 state = IDLE;
             }
             break;
         }
-       
+
     }
 }
