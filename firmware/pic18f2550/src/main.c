@@ -80,14 +80,28 @@
  * Helpers to set/get ports
  */
 #define PEDAL_SWITCH   PORTBbits.RB4
+#define BTN1_SWITCH    PORTAbits.RA3
+#define BTN2_SWITCH    PORTAbits.RA4
+#define BTN3_SWITCH    PORTAbits.RA5
+
 #define LED_RED        LATBbits.LATB2
 #define LED_YELLOW     LATBbits.LATB3
-#define ARC_RELAY      LATCbits.LATC0
-#define PUMP_SOLENOID  LATCbits.LATC1
+#define ARC_RELAY      LATCbits.LATC1
+#define PUMP_SOLENOID  LATCbits.LATC0
 #define HF_RELAY       LATCbits.LATC2
 
-#define PEDAL_RELEASED ((PEDAL_SWITCH != 0) && (PEDAL_SWITCH != 0) && (PEDAL_SWITCH != 0))
-#define PEDAL_PRESSED  ((PEDAL_SWITCH == 0) && (PEDAL_SWITCH == 0) && (PEDAL_SWITCH == 0))
+#define PEDAL_RELEASED (PEDAL_SWITCH != 0)
+#define PEDAL_PRESSED  (PEDAL_SWITCH == 0)
+
+#define BTN1_RELEASED ((BTN1_SWITCH != 0) && (BTN1_SWITCH != 0) && (BTN1_SWITCH != 0))
+#define BTN1_PRESSED  ((BTN1_SWITCH == 0) && (BTN1_SWITCH == 0) && (BTN1_SWITCH == 0))
+
+#define BTN2_RELEASED ((BTN2_SWITCH != 0) && (BTN2_SWITCH != 0) && (BTN2_SWITCH != 0))
+#define BTN2_PRESSED  ((BTN2_SWITCH == 0) && (BTN2_SWITCH == 0) && (BTN2_SWITCH == 0))
+
+#define BTN3_RELEASED ((BTN3_SWITCH != 0) && (BTN3_SWITCH != 0) && (BTN3_SWITCH != 0))
+#define BTN3_PRESSED  ((BTN3_SWITCH == 0) && (BTN3_SWITCH == 0) && (BTN3_SWITCH == 0))
+
 
 /**
  * Welding Constants
@@ -126,6 +140,9 @@ void init(void)
 
     // Inputs
     TRISBbits.TRISB4 = 1;  // Pedal switch
+    TRISAbits.TRISA3 = 1;  // Btn1
+    TRISAbits.TRISA4 = 1;  // Btn2
+    TRISAbits.TRISA5 = 1;  // Btn3
 
     // Outputs
     LED_RED = 0;
@@ -195,19 +212,19 @@ void main(void)
 {
     init();
 
-    led_matrix_init(true, false, 64);
-
-    led_matrix_buffer_clear();
-    led_matrix_print("PR=");
-    led_matrix_setpos(3);
-    led_matrix_print_u16_dec1(32, '0', 1);
-    led_matrix_buffer_send();
-
-    //led_matrix_demo();
+//    led_matrix_init(true, false, 64);
+//    led_matrix_buffer_clear();
+//    led_matrix_print("PR=");
+//    led_matrix_setpos(3);
+//    led_matrix_print_u16_dec1(32, '0', 1);
+//    led_matrix_buffer_send();
 
     enum States state = IDLE;
     while (1) {
-        uint8_t pedal_pressed = PEDAL_PRESSED;
+        uint8_t pedal_pressed = 1;
+        for(uint8_t i=0; i<64; i++) {
+            pedal_pressed &= PEDAL_PRESSED;
+        }
         uint8_t pedal_released = !pedal_pressed;
         uint8_t chrono_ended = is_chrono_ended();
 
