@@ -5,8 +5,8 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "Half Bridge Driver"
-Date "2021-06-07"
-Rev "1.0"
+Date "2021-06-17"
+Rev "1.1"
 Comp "Christophe Clienti"
 Comment1 ""
 Comment2 ""
@@ -293,7 +293,7 @@ L Device:R R1
 U 1 1 60CA61E1
 P 5250 2650
 F 0 "R1" H 5320 2696 50  0000 L CNN
-F 1 "2.2k" H 5320 2605 50  0000 L CNN
+F 1 "1k" H 5320 2605 50  0000 L CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 5180 2650 50  0001 C CNN
 F 3 "~" H 5250 2650 50  0001 C CNN
 	1    5250 2650
@@ -309,7 +309,7 @@ L Device:R R2
 U 1 1 60CC487E
 P 5250 3950
 F 0 "R2" H 5320 3996 50  0000 L CNN
-F 1 "2.2k" H 5320 3905 50  0000 L CNN
+F 1 "1k" H 5320 3905 50  0000 L CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 5180 3950 50  0001 C CNN
 F 3 "~" H 5250 3950 50  0001 C CNN
 	1    5250 3950
@@ -677,7 +677,7 @@ L Device:R R3
 U 1 1 60CE07B6
 P 5250 5250
 F 0 "R3" H 5320 5296 50  0000 L CNN
-F 1 "2.2k" H 5320 5205 50  0000 L CNN
+F 1 "1k" H 5320 5205 50  0000 L CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 5180 5250 50  0001 C CNN
 F 3 "~" H 5250 5250 50  0001 C CNN
 	1    5250 5250

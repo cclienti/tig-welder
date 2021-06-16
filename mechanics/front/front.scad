@@ -1,7 +1,7 @@
 tolerance = 0.5;
+thickness = 3;
 front_width = 483;
 front_height = 3*44.45;
-thickness = 3;
 pouce = 25.4;
 
 module xlr(thickness, tolerance) {
