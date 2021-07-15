@@ -20,30 +20,40 @@ extern "C" {
 #endif    
     
 #ifndef LED_MATRIX_SPI_CSn
-#define LED_MATRIX_SPI_CSn LATCbits.LATC6
+#define LED_MATRIX_SPI_CSn LATDbits.LATD0
 #endif
 
-#ifndef LED_MATRIX_SPI_BUFFER
-#define LED_MATRIX_SPI_BUFFER SSPBUF
-#endif
-    
-#ifndef LED_MATRIX_SPI_DONE_FLAG
-#define LED_MATRIX_SPI_DONE_FLAG SSPIF
-#endif
-   
-    
+#ifndef LED_MATRIX_SPI_SEND
+#define LED_MATRIX_SPI_SEND(SPI_BYTE)     \
+    IFS0bits.SPI1IF = 0;                  \
+    SPI1STATbits.SPIROV = 0;              \
+    SPI1BUF = SPI_BYTE;                   \
+    while(IFS0bits.SPI1IF == 0)
+#endif    
+  
 
 /**
  * Initialize the LED Matrix.
+ * 
+ * @param hflip, horizontal flip
+ * @param vflip, vertical flip
+ * @param luminosity, min:0 and max:255
  */
 void led_matrix_init(bool hflip, bool vflip, uint8_t luminosity);
 
 /**
  * Change the luminosity.
  * 
- * @param value
+ * @param value, min:0 and max:255
  */
 void led_matrix_luminosity(uint8_t value);
+
+/**
+ * Enable or disable test mode
+ * 
+ * @param enable, enable/disable test mode
+ */
+void led_matrix_test(bool enable);
 
 /**
  * Clear the device.
@@ -54,6 +64,8 @@ void led_matrix_clear(void);
  * Flip horizontally the display.
  * 
  * It will be applied to the next buffer fill/send
+ * 
+ * @param value, horizontal flip enable
  */
 void led_matrix_hflip(bool value);
 
@@ -61,9 +73,10 @@ void led_matrix_hflip(bool value);
  * Flip vertically the display.
  * 
  * It will be applied to the next buffer fill/send
+ * 
+ * @param value, vertical flip enable
  */
 void led_matrix_vflip(bool value);
-
 
 /**
  * Clear the virtual buffer
@@ -78,7 +91,7 @@ void led_matrix_buffer_send(void);
 /**
  * Write a character in the buffer at the current cursor position.
  * 
- * @param c
+ * @param c, char to send in the buffer
  */
 void led_matrix_putchar(char c);
 

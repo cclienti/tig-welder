@@ -26,9 +26,7 @@ static bool horizontal_flip = false;
 
 static void spi_send(uint8_t data)
 {
-    LED_MATRIX_SPI_BUFFER = data;
-    while(!LED_MATRIX_SPI_DONE_FLAG);
-    LED_MATRIX_SPI_DONE_FLAG = 0;
+    LED_MATRIX_SPI_SEND(data);
 }
 
 static void send_command(uint8_t reg, uint8_t value)
@@ -140,6 +138,11 @@ void led_matrix_init(bool hflip, bool vflip, uint8_t luminosity)
 void led_matrix_luminosity(uint8_t value)
 {
     send_command(REG_INTENSITY, value >> 4);
+}
+
+void led_matrix_test(bool enable)
+{
+    send_command(REG_DISPLAY_TEST, enable);
 }
 
 void led_matrix_clear(void)
