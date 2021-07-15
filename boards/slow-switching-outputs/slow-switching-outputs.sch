@@ -1,0 +1,625 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "Slow Switching Outputs"
+Date "2021-06-21"
+Rev "1.0"
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Isolator:PC817 U1
+U 1 1 60D0650A
+P 5000 2600
+F 0 "U1" H 5000 2925 50  0000 C CNN
+F 1 "PC817" H 5000 2834 50  0000 C CNN
+F 2 "Package_DIP:DIP-4_W7.62mm" H 4800 2400 50  0001 L CIN
+F 3 "http://www.soselectronic.cz/a_info/resource/d/pc817.pdf" H 5000 2600 50  0001 L CNN
+	1    5000 2600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Diode:1N4148W D1
+U 1 1 60D079E7
+P 4200 2600
+F 0 "D1" V 4154 2680 50  0000 L CNN
+F 1 "1N4148W" V 4245 2680 50  0000 L CNN
+F 2 "Diode_SMD:D_SOD-123" H 4200 2425 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/85748/1n4148w.pdf" H 4200 2600 50  0001 C CNN
+	1    4200 2600
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4200 2450 4650 2450
+Wire Wire Line
+	4650 2450 4650 2500
+Wire Wire Line
+	4650 2500 4700 2500
+Wire Wire Line
+	4200 2750 4650 2750
+Wire Wire Line
+	4650 2750 4650 2700
+Wire Wire Line
+	4650 2700 4700 2700
+$Comp
+L Connector:Conn_01x02_Male J2
+U 1 1 60D0988E
+P 3500 2550
+F 0 "J2" H 3608 2731 50  0000 C CNN
+F 1 "Conn_01x02_Male" H 3608 2640 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 3500 2550 50  0001 C CNN
+F 3 "~" H 3500 2550 50  0001 C CNN
+	1    3500 2550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 2550 4050 2550
+Wire Wire Line
+	4050 2550 4050 2450
+Wire Wire Line
+	4050 2450 4200 2450
+Connection ~ 4200 2450
+Wire Wire Line
+	4200 2750 4050 2750
+Wire Wire Line
+	4050 2750 4050 2650
+Wire Wire Line
+	4050 2650 3700 2650
+Connection ~ 4200 2750
+$Comp
+L power:GND #PWR0101
+U 1 1 60D0AD41
+P 5400 2950
+F 0 "#PWR0101" H 5400 2700 50  0001 C CNN
+F 1 "GND" H 5405 2777 50  0000 C CNN
+F 2 "" H 5400 2950 50  0001 C CNN
+F 3 "" H 5400 2950 50  0001 C CNN
+	1    5400 2950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 2700 5400 2700
+Wire Wire Line
+	5400 2700 5400 2850
+$Comp
+L power:+12V #PWR0102
+U 1 1 60D0B6BE
+P 5400 1600
+F 0 "#PWR0102" H 5400 1450 50  0001 C CNN
+F 1 "+12V" H 5415 1773 50  0000 C CNN
+F 2 "" H 5400 1600 50  0001 C CNN
+F 3 "" H 5400 1600 50  0001 C CNN
+	1    5400 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 60D0C11B
+P 5400 2000
+F 0 "R1" H 5470 2046 50  0000 L CNN
+F 1 "1k" H 5470 1955 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 5330 2000 50  0001 C CNN
+F 3 "~" H 5400 2000 50  0001 C CNN
+	1    5400 2000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5400 2150 5400 2500
+Wire Wire Line
+	5400 2500 5300 2500
+Wire Wire Line
+	5400 1850 5400 1650
+$Comp
+L Transistor_BJT:TIP122 Q1
+U 1 1 60D0CDFB
+P 5950 2500
+F 0 "Q1" H 6157 2546 50  0000 L CNN
+F 1 "TIP122" H 6157 2455 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 6150 2425 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/TIP120-D.PDF" H 5950 2500 50  0001 L CNN
+	1    5950 2500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5750 2500 5400 2500
+Connection ~ 5400 2500
+Wire Wire Line
+	6050 2700 6050 2850
+Wire Wire Line
+	6050 2850 5400 2850
+Connection ~ 5400 2850
+Wire Wire Line
+	5400 2850 5400 2950
+$Comp
+L Diode:1N4005 D3
+U 1 1 60D14AF7
+P 5850 2000
+F 0 "D3" V 5804 2080 50  0000 L CNN
+F 1 "1N4005" V 5895 2080 50  0000 L CNN
+F 2 "Diode_SMD:D_SMB_Handsoldering" H 5850 1825 50  0001 C CNN
+F 3 "http://www.vishay.com/docs/88503/1n4001.pdf" H 5850 2000 50  0001 C CNN
+	1    5850 2000
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:Conn_01x02_Male J4
+U 1 1 60D160FC
+P 6500 1950
+F 0 "J4" H 6472 1924 50  0000 R CNN
+F 1 "Conn_01x02_Male" H 6472 1833 50  0000 R CNN
+F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 6500 1950 50  0001 C CNN
+F 3 "~" H 6500 1950 50  0001 C CNN
+	1    6500 1950
+	-1   0    0    -1  
+$EndComp
+Connection ~ 5400 1650
+Wire Wire Line
+	5400 1650 5400 1600
+Wire Wire Line
+	5850 2150 5850 2250
+Wire Wire Line
+	5850 2250 6050 2250
+Wire Wire Line
+	6050 2250 6050 2300
+Wire Wire Line
+	6300 2050 6300 2250
+Wire Wire Line
+	6300 2250 6050 2250
+Connection ~ 6050 2250
+Wire Wire Line
+	5850 1750 6050 1750
+Wire Wire Line
+	6050 1750 6050 1650
+Wire Wire Line
+	5850 1750 5850 1850
+Wire Wire Line
+	6300 1750 6050 1750
+Wire Wire Line
+	6300 1750 6300 1950
+Connection ~ 6050 1750
+Wire Wire Line
+	5400 1650 6050 1650
+$Comp
+L Isolator:PC817 U2
+U 1 1 60D19AEE
+P 5000 4950
+F 0 "U2" H 5000 5275 50  0000 C CNN
+F 1 "PC817" H 5000 5184 50  0000 C CNN
+F 2 "Package_DIP:DIP-4_W7.62mm" H 4800 4750 50  0001 L CIN
+F 3 "http://www.soselectronic.cz/a_info/resource/d/pc817.pdf" H 5000 4950 50  0001 L CNN
+	1    5000 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Diode:1N4148W D2
+U 1 1 60D19C34
+P 4200 4950
+F 0 "D2" V 4154 5030 50  0000 L CNN
+F 1 "1N4148W" V 4245 5030 50  0000 L CNN
+F 2 "Diode_SMD:D_SOD-123" H 4200 4775 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/85748/1n4148w.pdf" H 4200 4950 50  0001 C CNN
+	1    4200 4950
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4200 4800 4650 4800
+Wire Wire Line
+	4650 4800 4650 4850
+Wire Wire Line
+	4650 4850 4700 4850
+Wire Wire Line
+	4200 5100 4650 5100
+Wire Wire Line
+	4650 5100 4650 5050
+Wire Wire Line
+	4650 5050 4700 5050
+$Comp
+L Connector:Conn_01x02_Male J3
+U 1 1 60D19C44
+P 3500 4900
+F 0 "J3" H 3608 5081 50  0000 C CNN
+F 1 "Conn_01x02_Male" H 3608 4990 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 3500 4900 50  0001 C CNN
+F 3 "~" H 3500 4900 50  0001 C CNN
+	1    3500 4900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 4900 4050 4900
+Wire Wire Line
+	4050 4900 4050 4800
+Wire Wire Line
+	4050 4800 4200 4800
+Connection ~ 4200 4800
+Wire Wire Line
+	4200 5100 4050 5100
+Wire Wire Line
+	4050 5100 4050 5000
+Wire Wire Line
+	4050 5000 3700 5000
+Connection ~ 4200 5100
+$Comp
+L power:GND #PWR0103
+U 1 1 60D19C56
+P 5400 5300
+F 0 "#PWR0103" H 5400 5050 50  0001 C CNN
+F 1 "GND" H 5405 5127 50  0000 C CNN
+F 2 "" H 5400 5300 50  0001 C CNN
+F 3 "" H 5400 5300 50  0001 C CNN
+	1    5400 5300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5300 5050 5400 5050
+Wire Wire Line
+	5400 5050 5400 5200
+$Comp
+L power:+12V #PWR0104
+U 1 1 60D19C62
+P 5400 3600
+F 0 "#PWR0104" H 5400 3450 50  0001 C CNN
+F 1 "+12V" H 5415 3773 50  0000 C CNN
+F 2 "" H 5400 3600 50  0001 C CNN
+F 3 "" H 5400 3600 50  0001 C CNN
+	1    5400 3600
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 60D19C6C
+P 5400 4250
+F 0 "R2" H 5470 4296 50  0000 L CNN
+F 1 "1k" H 5470 4205 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.30x1.75mm_HandSolder" V 5330 4250 50  0001 C CNN
+F 3 "~" H 5400 4250 50  0001 C CNN
+	1    5400 4250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5400 4400 5400 4850
+Wire Wire Line
+	5400 4850 5300 4850
+Wire Wire Line
+	5750 4850 5400 4850
+Connection ~ 5400 4850
+Wire Wire Line
+	6050 5050 6050 5200
+Wire Wire Line
+	6050 5200 5400 5200
+Connection ~ 5400 5200
+Wire Wire Line
+	5400 5200 5400 5300
+Wire Wire Line
+	5850 4400 5850 4600
+Wire Wire Line
+	5850 4600 6050 4600
+Wire Wire Line
+	6050 4600 6050 4650
+Connection ~ 6050 4600
+$Comp
+L Transistor_BJT:PN2222A Q2
+U 1 1 60D24EE5
+P 5950 4850
+F 0 "Q2" H 6140 4896 50  0000 L CNN
+F 1 "PN2222A" H 6140 4805 50  0000 L CNN
+F 2 "Package_TO_SOT_THT:TO-18-3" H 6150 4775 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/PN2222-D.PDF" H 5950 4850 50  0001 L CNN
+	1    5950 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Diode:1N4148W D4
+U 1 1 60D26619
+P 5850 4250
+F 0 "D4" V 5804 4330 50  0000 L CNN
+F 1 "1N4148W" V 5895 4330 50  0000 L CNN
+F 2 "Diode_SMD:D_SOD-123" H 5850 4075 50  0001 C CNN
+F 3 "https://www.vishay.com/docs/85748/1n4148w.pdf" H 5850 4250 50  0001 C CNN
+	1    5850 4250
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5400 3600 5400 3700
+Wire Wire Line
+	7250 3900 7250 3800
+Wire Wire Line
+	5850 3800 5850 4100
+Wire Wire Line
+	7250 4600 7250 4500
+Wire Wire Line
+	6050 3800 6050 3700
+Wire Wire Line
+	6050 3700 5400 3700
+Connection ~ 6050 3800
+Wire Wire Line
+	6050 3800 5850 3800
+Connection ~ 5400 3700
+Wire Wire Line
+	5400 3700 5400 4100
+Wire Wire Line
+	6050 4600 6700 4600
+$Comp
+L Relay:G2RL-2-DC12 RL2
+U 1 1 60D42E37
+P 7650 5350
+F 0 "RL2" H 8300 5300 50  0000 L CNN
+F 1 "G2RL-2-DC12" H 8300 5400 50  0000 L CNN
+F 2 "Relay_THT:Relay_DPDT_Omron_G2RL" H 8300 5300 50  0001 L CNN
+F 3 "https://omronfs.omron.com/en_US/ecb/products/pdf/en-g2rl.pdf" H 7650 5350 50  0001 C CNN
+	1    7650 5350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+12V #PWR0105
+U 1 1 60D629EF
+P 1900 3400
+F 0 "#PWR0105" H 1900 3250 50  0001 C CNN
+F 1 "+12V" H 1915 3573 50  0000 C CNN
+F 2 "" H 1900 3400 50  0001 C CNN
+F 3 "" H 1900 3400 50  0001 C CNN
+	1    1900 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0106
+U 1 1 60D630E0
+P 1900 4000
+F 0 "#PWR0106" H 1900 3750 50  0001 C CNN
+F 1 "GND" H 1905 3827 50  0000 C CNN
+F 2 "" H 1900 4000 50  0001 C CNN
+F 3 "" H 1900 4000 50  0001 C CNN
+	1    1900 4000
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x02_Male J1
+U 1 1 60D635A7
+P 1550 3650
+F 0 "J1" H 1658 3831 50  0000 C CNN
+F 1 "POWER" H 1658 3740 50  0000 C CNN
+F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_2-G-5,08_1x02_P5.08mm_Vertical" H 1550 3650 50  0001 C CNN
+F 3 "~" H 1550 3650 50  0001 C CNN
+	1    1550 3650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1750 3650 1900 3650
+Wire Wire Line
+	1900 3650 1900 3450
+Wire Wire Line
+	1750 3750 1900 3750
+Wire Wire Line
+	1900 3750 1900 3900
+$Comp
+L Device:CP C1
+U 1 1 60D6B1D9
+P 2250 3700
+F 0 "C1" H 2368 3746 50  0000 L CNN
+F 1 "1000uF 35V" H 2368 3655 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D16.0mm_P7.50mm" H 2288 3550 50  0001 C CNN
+F 3 "~" H 2250 3700 50  0001 C CNN
+	1    2250 3700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1900 3450 2250 3450
+Connection ~ 1900 3450
+Wire Wire Line
+	1900 3450 1900 3400
+Wire Wire Line
+	2250 3550 2250 3450
+Connection ~ 1900 3900
+Wire Wire Line
+	1900 3900 1900 4000
+Wire Wire Line
+	2250 3850 2250 3900
+Wire Wire Line
+	2250 3900 1900 3900
+$Comp
+L Mechanical:MountingHole H1
+U 1 1 60DA3EED
+P 1200 6300
+F 0 "H1" H 1300 6346 50  0000 L CNN
+F 1 "MountingHole" H 1300 6255 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_Pad" H 1200 6300 50  0001 C CNN
+F 3 "~" H 1200 6300 50  0001 C CNN
+	1    1200 6300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H2
+U 1 1 60DA4445
+P 1200 6500
+F 0 "H2" H 1300 6546 50  0000 L CNN
+F 1 "MountingHole" H 1300 6455 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_Pad" H 1200 6500 50  0001 C CNN
+F 3 "~" H 1200 6500 50  0001 C CNN
+	1    1200 6500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H3
+U 1 1 60DA46DC
+P 1200 6700
+F 0 "H3" H 1300 6746 50  0000 L CNN
+F 1 "MountingHole" H 1300 6655 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_Pad" H 1200 6700 50  0001 C CNN
+F 3 "~" H 1200 6700 50  0001 C CNN
+	1    1200 6700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H4
+U 1 1 60DA48FC
+P 1200 6900
+F 0 "H4" H 1300 6946 50  0000 L CNN
+F 1 "MountingHole" H 1300 6855 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_Pad" H 1200 6900 50  0001 C CNN
+F 3 "~" H 1200 6900 50  0001 C CNN
+	1    1200 6900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Relay:G2RL-2-DC12 RL1
+U 1 1 60D27474
+P 7650 4200
+F 0 "RL1" H 8280 4246 50  0000 L CNN
+F 1 "G2RL-2-DC12" H 8280 4155 50  0000 L CNN
+F 2 "Relay_THT:Relay_DPDT_Omron_G2RL" H 8300 4150 50  0001 L CNN
+F 3 "https://omronfs.omron.com/en_US/ecb/products/pdf/en-g2rl.pdf" H 7650 4200 50  0001 C CNN
+	1    7650 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x03_Male J5
+U 1 1 60DBA20B
+P 9350 4200
+F 0 "J5" H 9322 4224 50  0000 R CNN
+F 1 "Conn_01x03_Male" H 9322 4133 50  0000 R CNN
+F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_3-G-5,08_1x03_P5.08mm_Vertical" H 9350 4200 50  0001 C CNN
+F 3 "~" H 9350 4200 50  0001 C CNN
+	1    9350 4200
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x03_Male J6
+U 1 1 60DBB138
+P 9350 5300
+F 0 "J6" H 9322 5324 50  0000 R CNN
+F 1 "Conn_01x03_Male" H 9322 5233 50  0000 R CNN
+F 2 "Connector_Phoenix_MSTB:PhoenixContact_MSTBVA_2,5_3-G-5,08_1x03_P5.08mm_Vertical" H 9350 5300 50  0001 C CNN
+F 3 "~" H 9350 5300 50  0001 C CNN
+	1    9350 5300
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	7250 5750 7250 5650
+Wire Wire Line
+	6050 3800 6850 3800
+Wire Wire Line
+	7250 5050 6850 5050
+Wire Wire Line
+	6850 5050 6850 3800
+Connection ~ 6850 3800
+Wire Wire Line
+	6850 3800 7250 3800
+Wire Wire Line
+	6700 5750 6700 4600
+Wire Wire Line
+	6700 5750 7250 5750
+Connection ~ 6700 4600
+Wire Wire Line
+	6700 4600 7250 4600
+Wire Wire Line
+	7750 3900 7750 3800
+Wire Wire Line
+	7750 3800 8150 3800
+Wire Wire Line
+	8150 3800 8150 3900
+Wire Wire Line
+	7950 3900 7950 3650
+Wire Wire Line
+	7950 3650 7550 3650
+Wire Wire Line
+	7550 3650 7550 3900
+Wire Wire Line
+	7750 5050 7750 4950
+Wire Wire Line
+	7750 4950 8150 4950
+Wire Wire Line
+	8150 4950 8150 5050
+Wire Wire Line
+	7950 5050 7950 4800
+Wire Wire Line
+	7950 4800 7550 4800
+Wire Wire Line
+	7550 4800 7550 5050
+Wire Wire Line
+	7650 4500 7650 4550
+Wire Wire Line
+	8050 4550 8050 4500
+Wire Wire Line
+	9050 4550 9050 4200
+Wire Wire Line
+	9050 4200 9150 4200
+Wire Wire Line
+	7650 4550 8050 4550
+Connection ~ 8050 4550
+Wire Wire Line
+	8050 4550 9050 4550
+Connection ~ 8150 3800
+Connection ~ 7950 3650
+Wire Wire Line
+	9150 5200 9050 5200
+Wire Wire Line
+	9050 5200 9050 4800
+Wire Wire Line
+	9050 4800 7950 4800
+Connection ~ 7950 4800
+Wire Wire Line
+	8150 4950 8900 4950
+Wire Wire Line
+	8900 4950 8900 5400
+Wire Wire Line
+	8900 5400 9150 5400
+Connection ~ 8150 4950
+Wire Wire Line
+	9150 5300 9050 5300
+Wire Wire Line
+	9050 5300 9050 5700
+Wire Wire Line
+	9050 5700 8050 5700
+Wire Wire Line
+	8050 5700 8050 5650
+Wire Wire Line
+	8050 5700 7650 5700
+Wire Wire Line
+	7650 5700 7650 5650
+Connection ~ 8050 5700
+Wire Wire Line
+	9050 3650 7950 3650
+Wire Wire Line
+	8900 3800 8150 3800
+Wire Wire Line
+	8900 4300 8900 3800
+Wire Wire Line
+	9050 4100 9050 3650
+Wire Wire Line
+	9150 4100 9050 4100
+Wire Wire Line
+	9150 4300 8900 4300
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 60EC5045
+P 2250 3400
+F 0 "#FLG0101" H 2250 3475 50  0001 C CNN
+F 1 "PWR_FLAG" H 2250 3573 50  0000 C CNN
+F 2 "" H 2250 3400 50  0001 C CNN
+F 3 "~" H 2250 3400 50  0001 C CNN
+	1    2250 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2250 3400 2250 3450
+Connection ~ 2250 3450
+$Comp
+L power:PWR_FLAG #FLG0102
+U 1 1 60EC8CC4
+P 2250 4000
+F 0 "#FLG0102" H 2250 4075 50  0001 C CNN
+F 1 "PWR_FLAG" H 2250 4173 50  0000 C CNN
+F 2 "" H 2250 4000 50  0001 C CNN
+F 3 "~" H 2250 4000 50  0001 C CNN
+	1    2250 4000
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	2250 4000 2250 3900
+Connection ~ 2250 3900
+$EndSCHEMATC
