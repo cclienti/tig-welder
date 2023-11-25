@@ -27,8 +27,10 @@ fp-info-cache
 fp-lib-table
 sym-lib-table
 gerber*/
+*-backups*/
 *.zip
 log*/
+*.kicad_prl
 *-rescue.dcm
 *-rescue.lib
 
