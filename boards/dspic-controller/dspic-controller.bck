@@ -1,9 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP DSPIC30F4012
-D 30 MIPS, 48k Flash, 2k SRAM, DIP-28
-K 16-bit Digital Signal Controller Microchip dsPIC
-F https://ww1.microchip.com/downloads/en/DeviceDoc/70135G.pdf
-$ENDCMP
-#
-#End Doc Library
